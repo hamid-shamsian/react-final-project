@@ -1,7 +1,8 @@
-import Typography from "@mui/material/Typography";
+import { RouterProvider } from "react-router-dom";
+import router from "./routes";
 
-function App() {
-  return <Typography variant='h4' component='h1' gutterBottom></Typography>;
-}
+const App = () => {
+  return <RouterProvider router={router} />;
+};
 
 export default App;
