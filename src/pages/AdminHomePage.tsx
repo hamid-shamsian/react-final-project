@@ -1,5 +1,5 @@
 const AdminHomePage = () => {
-  return <div>Admin Home Page.</div>;
+  return null;
 };
 
 export default AdminHomePage;

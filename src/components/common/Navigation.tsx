@@ -6,7 +6,8 @@ const links = [
   { name: "خانه", href: "/" },
   { name: "سبدخرید", href: "/cart" },
   { name: "ورود", href: "/login" },
-  { name: "ثبت‌نام", href: "/signup" }
+  { name: "ثبت‌نام", href: "/signup" },
+  { name: "مدیریت", href: "/admin" }
 ];
 
 interface Props {
