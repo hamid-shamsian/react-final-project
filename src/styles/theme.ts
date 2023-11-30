@@ -1,8 +1,12 @@
 import { createTheme } from "@mui/material/styles";
 import { red } from "@mui/material/colors";
+import "./fonts.css";
 
-// A custom theme for this app
 const theme = createTheme({
+  // direction: "rtl",
+  typography: {
+    fontFamily: "IranianSans"
+  },
   palette: {
     primary: {
       main: "#556cd6"

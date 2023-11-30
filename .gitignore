@@ -13,6 +13,7 @@ dist-ssr
 *.local
 
 favicon.ico
+*.ttf
 
 # Editor directories and files
 .vscode/*
