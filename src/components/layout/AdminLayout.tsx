@@ -1,9 +1,10 @@
 import { Outlet } from "react-router-dom";
+import AdminMenu from "../widget/AdminMenu";
 
 const AdminLayout = () => {
   return (
     <>
-      <header>some admin header....</header>
+      <AdminMenu />
       <Outlet />
     </>
   );
