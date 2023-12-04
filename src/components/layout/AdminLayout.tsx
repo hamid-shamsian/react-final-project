@@ -3,10 +3,9 @@ import AdminMenu from "../widget/AdminMenu";
 
 const AdminLayout = () => {
   return (
-    <>
-      <AdminMenu />
+    <AdminMenu>
       <Outlet />
-    </>
+    </AdminMenu>
   );
 };
 
