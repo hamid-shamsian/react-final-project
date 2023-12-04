@@ -11,16 +11,16 @@ import PolicyPage from "./pages/PolicyPage";
 import ErrorPage from "./pages/ErrorPage";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
-import AdminPagesLoading from "./pages/AdminPagesLoading";
+import AdminPagesLoading from "./pages/admin/AdminPagesLoading";
 import Suspended from "./components/common/Suspended";
 
 // Lazy Imports: note that the addresses must be relative to the utilityFuncs module.
 const AdminLayout = lazyImport("../components/layout/AdminLayout");
-const AdminHomePage = lazyImport("../pages/AdminHomePage");
-const AdminOrdersPage = lazyImport("../pages/AdminOrdersPage");
-const AdminStockPage = lazyImport("../pages/AdminStockPage");
-const AdminProductsPage = lazyImport("../pages/AdminProductsPage");
-const AdminCategoriesPage = lazyImport("../pages/AdminCategoriesPage");
+const AdminHomePage = lazyImport("../pages/admin/AdminHomePage");
+const AdminOrdersPage = lazyImport("../pages/admin/AdminOrdersPage");
+const AdminStockPage = lazyImport("../pages/admin/AdminStockPage");
+const AdminProductsPage = lazyImport("../pages/admin/AdminProductsPage");
+const AdminCategoriesPage = lazyImport("../pages/admin/AdminCategoriesPage");
 
 const router = createBrowserRouter([
   {
