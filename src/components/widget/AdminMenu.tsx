@@ -1,11 +1,11 @@
 import * as React from "react";
+import { NavLink } from "react-router-dom";
 import { styled, Theme, CSSObject } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import List from "@mui/material/List";
-import CssBaseline from "@mui/material/CssBaseline";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
@@ -15,10 +15,44 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
+import LocalMallIcon from "@mui/icons-material/LocalMall";
+import InventoryIcon from "@mui/icons-material/Inventory";
+import LocalOfferIcon from "@mui/icons-material/LocalOffer";
+import FolderSharedIcon from "@mui/icons-material/FolderShared";
+import SettingsIcon from "@mui/icons-material/Settings";
 
-const drawerWidth = 220;
+const drawerWidth = 230;
+
+const primaryMenuItems = [
+  {
+    title: "سفارشات",
+    to: "orders",
+    icon: <LocalMallIcon />
+  },
+  {
+    title: "موجودی و قیمت",
+    to: "stock",
+    icon: <InventoryIcon />
+  },
+  {
+    title: "محصولات",
+    to: "products",
+    icon: <LocalOfferIcon />
+  }
+];
+
+const secondaryMenuItems = [
+  {
+    title: "مشتریان",
+    to: "customers",
+    icon: <FolderSharedIcon />
+  },
+  {
+    title: "تنظیمات",
+    to: "settings",
+    icon: <SettingsIcon />
+  }
+];
 
 const openedMixin = (theme: Theme): CSSObject => ({
   width: drawerWidth,
@@ -87,68 +121,50 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: prop => prop !== "open" })
   })
 }));
 
-export default function MiniDrawer() {
+interface AdminMenuProps {
+  children: React.ReactNode;
+}
+
+const AdminMenu = ({ children }: AdminMenuProps) => {
   const [open, setOpen] = React.useState(false);
 
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
+  const handleDrawerOpen = () => setOpen(true);
+  const handleDrawerClose = () => setOpen(false);
 
   return (
     <Box sx={{ display: "flex" }}>
-      <CssBaseline />
       <AppBar position='fixed' open={open}>
-        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-          {open && <div></div>}
-
+        <Toolbar sx={{ display: "flex", justifyContent: open ? "flex-end" : "space-between" }}>
           <IconButton
             color='inherit'
             aria-label='open drawer'
             onClick={handleDrawerOpen}
             edge='end'
-            sx={{
-              marginLeft: 0,
-              ...(open && { display: "none" })
-            }}
+            sx={{ marginLeft: 0, ...(open && { display: "none" }) }}
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant='h6' noWrap component='div'>
+          <Typography variant='h6' noWrap component='h1'>
             پنل مدیریت
           </Typography>
         </Toolbar>
       </AppBar>
+
       <Drawer variant='permanent' open={open} anchor='right'>
         <DrawerHeader>
           <IconButton onClick={handleDrawerClose}>
             <ChevronRightIcon />
           </IconButton>
         </DrawerHeader>
-        <Divider />
-        <List>
-          {["سفارشات", "موجودی و قیمت", "محصولات"].map((text, index) => (
-            <ListItem key={text} disablePadding sx={{ display: "block" }}>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    ml: open ? 3 : "auto",
-                    justifyContent: "center"
-                  }}
-                >
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+
+        {/* <Divider /> */}
+
+        <List component='nav'>
+          {primaryMenuItems.map((item, i) => (
+            <ListItem key={i} disablePadding sx={{ display: "block", color: "inherit" }} component={NavLink} to={item.to}>
+              <ListItemButton sx={{ minHeight: 48, justifyContent: open ? "initial" : "center", px: 2.5 }}>
+                <ListItemIcon sx={{ minWidth: 0, ml: open ? 3 : "auto", justifyContent: "center" }}>{item.icon}</ListItemIcon>
+                <ListItemText primary={item.title} sx={{ opacity: open ? 1 : 0, textAlign: "right" }} />
               </ListItemButton>
             </ListItem>
           ))}
@@ -156,35 +172,24 @@ export default function MiniDrawer() {
 
         <Divider />
 
-        <List>
-          {["تنظیمات", "پیامها"].map((text, index) => (
-            <ListItem key={text} disablePadding sx={{ display: "block" }}>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    ml: open ? 3 : "auto",
-                    justifyContent: "center"
-                  }}
-                >
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+        <List component='nav'>
+          {secondaryMenuItems.map((item, i) => (
+            <ListItem key={i} disablePadding sx={{ display: "block", color: "inherit" }} component={NavLink} to={item.to}>
+              <ListItemButton sx={{ minHeight: 48, justifyContent: open ? "initial" : "center", px: 2.5 }}>
+                <ListItemIcon sx={{ minWidth: 0, ml: open ? 3 : "auto", justifyContent: "center" }}>{item.icon}</ListItemIcon>
+                <ListItemText primary={item.title} sx={{ opacity: open ? 1 : 0, textAlign: "right" }} />
               </ListItemButton>
             </ListItem>
           ))}
         </List>
       </Drawer>
+
       <Box component='main' sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
-        <Typography paragraph>محتوا</Typography>
+        {children}
       </Box>
     </Box>
   );
-}
+};
+
+export default AdminMenu;
