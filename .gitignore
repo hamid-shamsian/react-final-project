@@ -14,6 +14,7 @@ dist-ssr
 
 favicon.ico
 *.ttf
+*.jpg
 
 # Editor directories and files
 .vscode/*
