@@ -3,15 +3,17 @@ import { styled, Theme } from "@mui/material/styles";
 
 interface CustomLinkProps {
   theme?: Theme;
-  decor?: "none" | "underline";
+  underline?: boolean;
   colors?: {
     light: string;
     dark: string;
   };
 }
 
-const CustomLink = styled(Link)<CustomLinkProps>(({ theme, decor = "none", colors }) => ({
-  textDecoration: decor,
+const CustomLink = styled(Link, {
+  shouldForwardProp: prop => prop !== "underline"
+})<CustomLinkProps>(({ theme, underline = false, colors }) => ({
+  textDecoration: underline ? "underline" : "none",
   color: colors ? (theme?.palette.mode === "light" ? colors.light : colors.dark) : "inherit"
 }));
 
