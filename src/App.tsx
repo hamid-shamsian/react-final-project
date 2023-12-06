@@ -1,8 +1,17 @@
 import { RouterProvider } from "react-router-dom";
+import { Provider as ReduxProvider } from "react-redux";
+import { ToastContainer } from "react-toastify";
 import router from "./routes";
+import store from "./redux/store";
+import "react-toastify/dist/ReactToastify.css";
 
 const App = () => {
-  return <RouterProvider router={router} />;
+  return (
+    <ReduxProvider store={store}>
+      <RouterProvider router={router} />
+      <ToastContainer rtl />
+    </ReduxProvider>
+  );
 };
 
 export default App;
