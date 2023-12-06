@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import { List, ListItem, ListItemText } from "@mui/material";
-import { NavLink } from "react-router-dom";
+import CustomNavLink from "./CustomNavLink";
 
 const staticLinks = [
   { name: "خانه", href: "/" },
@@ -31,9 +31,9 @@ const Navigation = ({ onItemClick, layout = "column" }: Props) => {
     <List component='nav' sx={{ display: "flex", flexDirection: layout, paddingLeft: layout === "row" ? 0 : 10 }}>
       {links.map((link, i) => (
         <ListItem key={i} onClick={onItemClick}>
-          <NavLink to={link.href}>
+          <CustomNavLink to={link.href} active='shadow'>
             <ListItemText primary={link.name} />
-          </NavLink>
+          </CustomNavLink>
         </ListItem>
       ))}
     </List>

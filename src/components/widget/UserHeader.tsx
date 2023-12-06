@@ -12,7 +12,7 @@ function UserHeader() {
         <Typography variant='h4' component='h1'>
           گیک‌شاپ
         </Typography>
-        {isMobile ? <BurgerMenu /> : <Navigation color='white' layout='row' />}
+        {isMobile ? <BurgerMenu /> : <Navigation layout='row' />}
       </Toolbar>
     </AppBar>
   );
