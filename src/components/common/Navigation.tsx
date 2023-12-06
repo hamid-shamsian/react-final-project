@@ -1,13 +1,19 @@
-import { styled } from "@mui/material/styles";
+import { useSelector } from "react-redux";
 import { List, ListItem, ListItemText } from "@mui/material";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
-const links = [
+const staticLinks = [
   { name: "خانه", href: "/" },
-  { name: "سبدخرید", href: "/cart" },
+  { name: "سبدخرید", href: "/cart" }
+];
+
+const loggedInLinks = [
+  { name: "پروفایل", href: "/profile" },
+  { name: "خروج", href: "/logout" }
+];
+const loggedOutLinks = [
   { name: "ورود", href: "/login" },
-  { name: "ثبت‌نام", href: "/signup" },
-  { name: "مدیریت", href: "/admin" }
+  { name: "ثبت‌نام", href: "/signup" }
 ];
 
 interface Props {
@@ -16,11 +22,10 @@ interface Props {
   layout?: string;
 }
 
-const Navigation = ({ onItemClick, color, layout = "column" }: Props) => {
-  const NavLink = styled(Link)({
-    textDecoration: "none",
-    color
-  });
+const Navigation = ({ onItemClick, layout = "column" }: Props) => {
+  const user = useSelector((state: any) => state.auth);
+
+  const links = staticLinks.concat(user ? loggedInLinks : loggedOutLinks);
 
   return (
     <List component='nav' sx={{ display: "flex", flexDirection: layout, paddingLeft: layout === "row" ? 0 : 10 }}>

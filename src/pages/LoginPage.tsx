@@ -1,5 +1,6 @@
 import { FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -11,10 +12,12 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import CustomLink from "../components/common/CustomLink";
 import RTLTextField from "../components/common/RTLTextField";
-import LoginImage from "../assets/images/login.jpg";
 import auth from "../services/authService";
+import { authActions } from "../redux/features/authSlice";
+import LoginImage from "../assets/images/login.jpg";
 
 const LoginPage = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -24,6 +27,7 @@ const LoginPage = () => {
     try {
       const user = await auth.login(username.value, password.value);
 
+      dispatch(authActions.setUser(user));
       if (user.role === "ADMIN") navigate("/admin");
       else navigate("/");
     } catch (error) {}
