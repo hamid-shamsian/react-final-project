@@ -11,6 +11,7 @@ import PolicyPage from "./pages/PolicyPage";
 import ErrorPage from "./pages/ErrorPage";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
+import LogoutPage from "./pages/LogoutPage";
 import AdminPagesLoading from "./pages/admin/AdminPagesLoading";
 import Suspended from "./components/common/Suspended";
 
@@ -34,7 +35,8 @@ const router = createBrowserRouter([
       { path: "cart", element: <CartPage /> },
       { path: "checkout", element: <CheckoutPage /> },
       { path: "profile", element: <ProfilePage /> },
-      { path: "policy", element: <PolicyPage /> }
+      { path: "policy", element: <PolicyPage /> },
+      { path: "logout", element: <LogoutPage /> }
     ]
   },
   {
