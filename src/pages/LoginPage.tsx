@@ -1,4 +1,5 @@
 import { FormEvent } from "react";
+import { useNavigate } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -11,15 +12,21 @@ import Typography from "@mui/material/Typography";
 import CustomLink from "../components/common/CustomLink";
 import RTLTextField from "../components/common/RTLTextField";
 import LoginImage from "../assets/images/login.jpg";
+import auth from "../services/authService";
 
 const LoginPage = () => {
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password")
-    });
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const { username, password } = e.currentTarget;
+
+    try {
+      const user = await auth.login(username.value, password.value);
+
+      if (user.role === "ADMIN") navigate("/admin");
+      else navigate("/");
+    } catch (error) {}
   };
 
   return (
@@ -49,7 +56,7 @@ const LoginPage = () => {
           </Typography>
 
           <Box component='form' noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
-            <RTLTextField margin='normal' required fullWidth id='email' label='نام کاربری' name='email' autoComplete='email' autoFocus />
+            <RTLTextField margin='normal' required fullWidth id='username' label='نام کاربری' name='username' autoComplete='username' autoFocus />
 
             <RTLTextField
               margin='normal'
