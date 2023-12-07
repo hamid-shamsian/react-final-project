@@ -80,10 +80,10 @@ if (storedTokenExp > Date.now() / 1000) {
   logout(); // to remove expired refresh token from localstorage.
 }
 
-const auth = {
+const authService = {
   login,
   logout,
   getStoredUser
 };
 
-export default auth;
+export default authService;

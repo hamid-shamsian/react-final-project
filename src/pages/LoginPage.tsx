@@ -12,7 +12,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import CustomLink from "../components/common/CustomLink";
 import RTLTextField from "../components/common/RTLTextField";
-import auth from "../services/authService";
+import authService from "../services/authService";
 import { authActions } from "../redux/features/authSlice";
 import LoginImage from "../assets/images/login.jpg";
 
@@ -25,7 +25,7 @@ const LoginPage = () => {
     const { username, password } = e.currentTarget;
 
     try {
-      const user = await auth.login(username.value, password.value);
+      const user = await authService.login(username.value, password.value);
 
       dispatch(authActions.setUser(user));
       if (user.role === "ADMIN") navigate("/admin");
