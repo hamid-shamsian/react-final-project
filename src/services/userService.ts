@@ -15,8 +15,11 @@ const getLoggedInUser = async () => {
   return null;
 };
 
+const getUserById = (id: string) => http.get(userEndpoint + "/" + id);
+
 const userService = {
-  getLoggedInUser
+  getLoggedInUser,
+  getUserById
 };
 
 export default userService;
