@@ -1,19 +1,20 @@
 import { createBrowserRouter } from "react-router-dom";
-import { lazyImport } from "./utils/utilityFuncs";
-import UserLayout, { userLoader } from "./components/layout/UserLayout";
-import HomePage from "./pages/HomePage";
-import CategoriesPage from "./pages/CategoriesPage";
-import ProductPage from "./pages/ProductPage";
-import CartPage from "./pages/CartPage";
-import CheckoutPage from "./pages/CheckoutPage";
-import ProfilePage from "./pages/ProfilePage";
-import PolicyPage from "./pages/PolicyPage";
-import ErrorPage from "./pages/ErrorPage";
-import LoginPage from "./pages/LoginPage";
-import SignupPage from "./pages/SignupPage";
-import LogoutPage from "./pages/LogoutPage";
-import AdminPagesLoading from "./pages/admin/AdminPagesLoading";
-import Suspended from "./components/common/Suspended";
+import { lazyImport } from "../utils/utilityFuncs";
+import UserLayout, { userLoader } from "../components/layout/UserLayout";
+import HomePage from "../pages/HomePage";
+import CategoriesPage from "../pages/CategoriesPage";
+import ProductPage from "../pages/ProductPage";
+import CartPage from "../pages/CartPage";
+import CheckoutPage from "../pages/CheckoutPage";
+import ProfilePage from "../pages/ProfilePage";
+import PolicyPage from "../pages/PolicyPage";
+import ErrorPage from "../pages/ErrorPage";
+import LoginPage from "../pages/LoginPage";
+import SignupPage from "../pages/SignupPage";
+import LogoutPage from "../pages/LogoutPage";
+import AdminPagesLoading from "../pages/admin/AdminPagesLoading";
+import Suspended from "../components/common/Suspended";
+import protectRoute from "./protectedRoutesLoaders";
 
 // Lazy Imports: note that the addresses must be relative to the utilityFuncs module.
 const AdminLayout = lazyImport("../components/layout/AdminLayout");
@@ -35,7 +36,7 @@ const router = createBrowserRouter([
       { path: "products/:id", element: <ProductPage /> },
       { path: "cart", element: <CartPage /> },
       { path: "checkout", element: <CheckoutPage /> },
-      { path: "profile", element: <ProfilePage /> },
+      { path: "profile", element: <ProfilePage />, loader: protectRoute.fromNoneLoggedInUsers },
       { path: "policy", element: <PolicyPage /> },
       { path: "logout", element: <LogoutPage /> }
     ]
@@ -43,6 +44,7 @@ const router = createBrowserRouter([
   {
     path: "/admin",
     element: <Suspended comp={AdminLayout} load={() => <AdminPagesLoading wholePage={true} />} />,
+    loader: protectRoute.fromNoneAdminUsers,
     children: [
       { index: true, element: <Suspended comp={AdminHomePage} load={AdminPagesLoading} /> },
       { path: "orders", element: <Suspended comp={AdminOrdersPage} load={AdminPagesLoading} /> },
@@ -51,8 +53,8 @@ const router = createBrowserRouter([
       { path: "categories", element: <Suspended comp={AdminCategoriesPage} load={AdminPagesLoading} /> }
     ]
   },
-  { path: "/login", element: <LoginPage /> },
-  { path: "/signup", element: <SignupPage /> }
+  { path: "/login", element: <LoginPage />, loader: protectRoute.fromLoggedInUsers },
+  { path: "/signup", element: <SignupPage />, loader: protectRoute.fromLoggedInUsers }
 ]);
 
 export default router;

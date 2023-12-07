@@ -1,7 +1,7 @@
 import { RouterProvider } from "react-router-dom";
 import { Provider as ReduxProvider } from "react-redux";
 import { ToastContainer } from "react-toastify";
-import router from "./routes";
+import router from "./routes/routes";
 import store from "./redux/store";
 import "react-toastify/dist/ReactToastify.css";
 

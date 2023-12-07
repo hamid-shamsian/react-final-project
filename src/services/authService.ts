@@ -7,7 +7,10 @@ const authEndpoint = config.API_BASE_URL + "/auth";
 const tokenKey = "token";
 let intervalID = 0;
 
-const scheduleAccessTokenRenewal = () => (intervalID = setInterval(renewAccessToken, config.ACCESS_TOKEN_LIFETIME_SECONDS * 1000));
+const scheduleAccessTokenRenewal = () => {
+  clearInterval(intervalID); // to stop possible previous existing running intervals...
+  intervalID = setInterval(renewAccessToken, config.ACCESS_TOKEN_LIFETIME_SECONDS * 1000);
+};
 
 const renewAccessToken = async () => {
   try {
@@ -44,6 +47,7 @@ interface TokenPayload {
   id: string;
   firstname: string;
   lastname: string;
+  role: string;
   iat: number;
   exp: number;
 }
@@ -58,11 +62,7 @@ const getDecodedToken = () => {
 
 const getStoredUser = () => {
   const decodedToken = getDecodedToken();
-  if (decodedToken) {
-    const { id, firstname, lastname } = decodedToken;
-    return { id, firstname, lastname };
-  }
-  return null;
+  return decodedToken ? (({ iat, exp, ...user }) => user)(decodedToken) : null;
 };
 
 const getJWT = () => {
