@@ -1,5 +1,4 @@
-import * as React from "react";
-import { NavLink } from "react-router-dom";
+import { useState, ReactNode } from "react";
 import { styled, Theme, CSSObject } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
@@ -15,15 +14,23 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
+import HomeIcon from "@mui/icons-material/Home";
 import LocalMallIcon from "@mui/icons-material/LocalMall";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import FolderSharedIcon from "@mui/icons-material/FolderShared";
 import SettingsIcon from "@mui/icons-material/Settings";
+import StoreIcon from "@mui/icons-material/Store";
+import CustomNavLink from "./../common/CustomNavLink";
 
 const drawerWidth = 230;
 
 const primaryMenuItems = [
+  {
+    title: "خانه",
+    to: "/admin",
+    icon: <HomeIcon />
+  },
   {
     title: "سفارشات",
     to: "orders",
@@ -42,6 +49,11 @@ const primaryMenuItems = [
 ];
 
 const secondaryMenuItems = [
+  {
+    title: "فروشگاه",
+    to: "/",
+    icon: <StoreIcon />
+  },
   {
     title: "مشتریان",
     to: "customers",
@@ -122,11 +134,11 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: prop => prop !== "open" })
 }));
 
 interface AdminMenuProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 const AdminMenu = ({ children }: AdminMenuProps) => {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   const handleDrawerOpen = () => setOpen(true);
   const handleDrawerClose = () => setOpen(false);
@@ -161,7 +173,7 @@ const AdminMenu = ({ children }: AdminMenuProps) => {
 
         <List component='nav'>
           {primaryMenuItems.map((item, i) => (
-            <ListItem key={i} disablePadding sx={{ display: "block", color: "inherit" }} component={NavLink} to={item.to}>
+            <ListItem key={i} disablePadding sx={{ display: "block", color: "inherit" }} component={CustomNavLink} to={item.to} end>
               <ListItemButton sx={{ minHeight: 48, justifyContent: open ? "initial" : "center", px: 2.5 }}>
                 <ListItemIcon sx={{ minWidth: 0, ml: open ? 3 : "auto", justifyContent: "center" }}>{item.icon}</ListItemIcon>
                 <ListItemText primary={item.title} sx={{ opacity: open ? 1 : 0, textAlign: "right" }} />
@@ -174,7 +186,7 @@ const AdminMenu = ({ children }: AdminMenuProps) => {
 
         <List component='nav'>
           {secondaryMenuItems.map((item, i) => (
-            <ListItem key={i} disablePadding sx={{ display: "block", color: "inherit" }} component={NavLink} to={item.to}>
+            <ListItem key={i} disablePadding sx={{ display: "block", color: "inherit" }} component={CustomNavLink} to={item.to}>
               <ListItemButton sx={{ minHeight: 48, justifyContent: open ? "initial" : "center", px: 2.5 }}>
                 <ListItemIcon sx={{ minWidth: 0, ml: open ? 3 : "auto", justifyContent: "center" }}>{item.icon}</ListItemIcon>
                 <ListItemText primary={item.title} sx={{ opacity: open ? 1 : 0, textAlign: "right" }} />

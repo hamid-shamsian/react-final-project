@@ -9,13 +9,19 @@ const staticLinks = [
   { name: "سبدخرید", href: "/cart" }
 ];
 
-const loggedInLinks = [
-  { name: "پروفایل", href: "/profile" },
-  { name: "خروج", href: "/logout" }
-];
 const loggedOutLinks = [
   { name: "ورود", href: "/login" },
   { name: "ثبت‌نام", href: "/signup" }
+];
+
+const userLinks = [
+  { name: "پروفایل", href: "/profile" },
+  { name: "خروج", href: "/logout" }
+];
+
+const adminLinks = [
+  { name: "پنل‌مدیریت", href: "/admin" },
+  { name: "خروج", href: "/logout" }
 ];
 
 interface NavigationProps {
@@ -26,7 +32,7 @@ interface NavigationProps {
 const Navigation = ({ onItemClick, layout = "column" }: NavigationProps) => {
   const user = useUserData();
 
-  const links = staticLinks.concat(user ? loggedInLinks : loggedOutLinks);
+  const links = staticLinks.concat(!user ? loggedOutLinks : user.role === "ADMIN" ? adminLinks : userLinks);
 
   return (
     <Box sx={{ display: "flex", flexDirection: layout, alignItems: "center", gap: 10 }}>
