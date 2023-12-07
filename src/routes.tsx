@@ -1,6 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import { lazyImport } from "./utils/utilityFuncs";
-import UserLayout from "./components/layout/UserLayout";
+import UserLayout, { userLoader } from "./components/layout/UserLayout";
 import HomePage from "./pages/HomePage";
 import CategoriesPage from "./pages/CategoriesPage";
 import ProductPage from "./pages/ProductPage";
@@ -28,6 +28,7 @@ const router = createBrowserRouter([
     path: "/",
     element: <UserLayout />,
     errorElement: <ErrorPage />,
+    loader: userLoader,
     children: [
       { index: true, element: <HomePage /> },
       { path: "categories/:title?", element: <CategoriesPage /> },
