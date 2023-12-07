@@ -1,8 +1,8 @@
-import { useSelector } from "react-redux";
 import { List, ListItem, ListItemText } from "@mui/material";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import CustomNavLink from "./CustomNavLink";
+import useUserData from "./../../hooks/useUserData";
 
 const staticLinks = [
   { name: "خانه", href: "/" },
@@ -24,7 +24,7 @@ interface NavigationProps {
 }
 
 const Navigation = ({ onItemClick, layout = "column" }: NavigationProps) => {
-  const user = useSelector((state: any) => state.user);
+  const user = useUserData();
 
   const links = staticLinks.concat(user ? loggedInLinks : loggedOutLinks);
 
