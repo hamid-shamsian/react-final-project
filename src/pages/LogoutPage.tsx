@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { authActions } from "../redux/features/authSlice";
+import { userActions } from "../redux/features/userSlice";
 import authService from "../services/authService";
 
 const LogoutPage = () => {
@@ -10,7 +10,7 @@ const LogoutPage = () => {
 
   useEffect(() => {
     authService.logout();
-    dispatch(authActions.setUser(null));
+    dispatch(userActions.setUser(null));
     navigate("/");
     // maybe send a request to backend to invalidate the current refreshToken... but the backend respond to this request by accessToken !!
   });

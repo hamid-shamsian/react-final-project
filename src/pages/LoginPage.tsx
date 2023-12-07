@@ -13,7 +13,7 @@ import Typography from "@mui/material/Typography";
 import CustomLink from "../components/common/CustomLink";
 import RTLTextField from "../components/common/RTLTextField";
 import authService from "../services/authService";
-import { authActions } from "../redux/features/authSlice";
+import { userActions } from "../redux/features/userSlice";
 import LoginImage from "../assets/images/login.jpg";
 
 const LoginPage = () => {
@@ -27,7 +27,7 @@ const LoginPage = () => {
     try {
       const user = await authService.login(username.value, password.value);
 
-      dispatch(authActions.setUser(user));
+      dispatch(userActions.setUser(user));
       if (user.role === "ADMIN") navigate("/admin");
       else navigate("/");
     } catch (error) {}

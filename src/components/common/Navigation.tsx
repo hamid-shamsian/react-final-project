@@ -23,7 +23,7 @@ interface Props {
 }
 
 const Navigation = ({ onItemClick, layout = "column" }: Props) => {
-  const user = useSelector((state: any) => state.auth);
+  const user = useSelector((state: any) => state.user);
 
   const links = staticLinks.concat(user ? loggedInLinks : loggedOutLinks);
 
