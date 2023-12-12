@@ -1,36 +1,31 @@
 import { jwtDecode } from "jwt-decode";
 import { toast } from "react-toastify";
+import { AxiosError } from "axios";
 import http from "./httpService";
 import config from "../../config.json";
 
 const authEndpoint = config.API_BASE_URL + "/auth";
-const tokenKey = "token";
-let intervalID = 0;
-
-const scheduleAccessTokenRenewal = () => {
-  clearInterval(intervalID); // to stop possible previous existing running intervals...
-  intervalID = setInterval(renewAccessToken, config.ACCESS_TOKEN_LIFETIME_SECONDS * 1000);
-};
+let token = "";
 
 const renewAccessToken = async () => {
   try {
-    const { data } = await http.post(authEndpoint + "/token", { refreshToken: getJWT() });
-    http.setJWT(data.token.accessToken);
-  } catch (er) {}
+    const { data } = await http.get(authEndpoint + "/token");
+    token = data.token.accessToken;
+    http.setToken(token);
+    return token; // for possible further uses... (sometimes it is used.)
+  } catch (er) {
+    return Promise.reject(er);
+  }
 };
 
 const login = async (username: string, password: string) => {
   try {
-    const {
-      data: { token, data }
-    } = await http.post(authEndpoint + "/login", { username, password });
+    const { data } = await http.post(authEndpoint + "/login", { username, password });
 
-    localStorage.setItem(tokenKey, token.refreshToken);
+    token = data.token.accessToken;
+    http.setToken(token);
 
-    http.setJWT(token.accessToken);
-    scheduleAccessTokenRenewal();
-
-    return data.user;
+    return data.data.user;
   } catch (error: any) {
     if (error?.response?.status === 401) {
       toast.error("نام‌کاربری یا کلمه‌عبور اشتباه است");
@@ -38,52 +33,62 @@ const login = async (username: string, password: string) => {
   }
 };
 
-const logout = () => {
-  localStorage.removeItem(tokenKey);
-  clearInterval(intervalID);
+const logout = async () => {
+  try {
+    await http.get(authEndpoint + "/logout");
+    token = "";
+    http.setToken(null);
+  } catch (error) {}
 };
 
 interface TokenPayload {
   id: string;
-  firstname: string;
-  lastname: string;
-  role: string;
   iat: number;
   exp: number;
 }
 
 const getDecodedToken = () => {
   try {
-    return jwtDecode<TokenPayload>(getJWT());
+    return jwtDecode<TokenPayload>(token);
   } catch (ex) {
     return null;
   }
 };
 
-const getStoredUser = () => {
-  const decodedToken = getDecodedToken();
-  return decodedToken ? (({ iat, exp, ...user }) => user)(decodedToken) : null;
-};
+const getLoggedInUserId = () => getDecodedToken()?.id ?? null;
 
-const getJWT = () => {
-  return localStorage.getItem(tokenKey) ?? "";
+let isRefreshingToken = false;
+
+const refreshingAccessTokenHandler = async (error: AxiosError) => {
+  if (error.response?.status === 401 && !isRefreshingToken) {
+    isRefreshingToken = true; // Set flag to indicate token refresh attempt executed once. (to prevent from infinite 401 loop...)
+
+    return new Promise(async (resolve, reject) => {
+      try {
+        const token = await renewAccessToken();
+        if (error.config) {
+          // if statement is only for satisfying typescript :)
+          error.config.headers["Authorization"] = "Bearer " + token; // put the new accessToken to the previous request which was failed because of expired accessToken. (in fact: setting the new accessToken in the default headers of axios by renewAccessToken (and setToken...) function will not set that for the previous failed request config object.)
+          resolve(http.requestByConfig(error.config));
+        }
+      } catch (refreshingError) {
+        reject(refreshingError);
+      } finally {
+        isRefreshingToken = false;
+      }
+    });
+  }
 };
 
 // ===============================================================================================
 
-const storedTokenExp = getDecodedToken()?.exp ?? 0;
-
-if (storedTokenExp > Date.now() / 1000) {
-  renewAccessToken();
-  scheduleAccessTokenRenewal();
-} else {
-  logout(); // to remove expired refresh token from localstorage.
-}
+http.setCustomErrorHandling(refreshingAccessTokenHandler);
+renewAccessToken();
 
 const authService = {
   login,
   logout,
-  getStoredUser
+  getLoggedInUserId
 };
 
 export default authService;

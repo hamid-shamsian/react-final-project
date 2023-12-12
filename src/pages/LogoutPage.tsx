@@ -12,7 +12,6 @@ const LogoutPage = () => {
     authService.logout();
     dispatch(userActions.setUser(null));
     navigate("/");
-    // maybe send a request to backend to invalidate the current refreshToken... but the backend respond to this request by accessToken !!
   });
 
   return null;
