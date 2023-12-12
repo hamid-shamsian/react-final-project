@@ -1,32 +1,11 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import Typography from "@mui/material/Typography";
+import { useState } from "react";
 import Box from "@mui/material/Box";
-import Pagination from "@mui/material/Pagination";
-import PaginationItem from "@mui/material/PaginationItem";
+import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import StripedTable from "../../components/widget/StripedTable";
-import productService from "../../services/productService";
-
-interface productType {
-  category: string;
-  createdAt: string;
-  description: string;
-  images: string[];
-  name: string;
-  price: number;
-  quantity: number;
-  rating: {
-    rate: number;
-    count: number;
-  };
-  slugname: string;
-  subcategory: string;
-  thumbnail: string;
-  updatedAt: string;
-  _id: string;
-}
+import Pagination from "../../components/common/Pagination";
+import LoadingSpinner from "../../components/common/LoadingSpinner";
+import useProducts, { Product } from "../../hooks/useProducts";
 
 const tableColumns = [
   {
@@ -36,42 +15,26 @@ const tableColumns = [
   {
     label: "موجودی",
     path: "quantity",
-    content: (item: productType) => <span style={{ textDecoration: "underline", color: "blue" }}>{item.quantity}</span>
+    content: (item: Product) => <span style={{ textDecoration: "underline", color: "blue" }}>{item.quantity}</span>
   },
   {
     label: "قیمت",
     path: "price",
-    content: (item: productType) => <span style={{ textDecoration: "underline", color: "blue" }}>{item.price}</span>
+    content: (item: Product) => <span style={{ textDecoration: "underline", color: "blue" }}>{item.price}</span>
   }
 ];
 
-const getProductsOfPage = async (
-  page: number,
-  setProductsCallBack: Dispatch<SetStateAction<never[]>>,
-  setTotalPagesCallBack: Dispatch<SetStateAction<number>>
-) => {
-  try {
-    const { data } = await productService.getProducts(page);
-
-    setTotalPagesCallBack(data.total_pages);
-    const { products } = data.data;
-
-    setProductsCallBack(products);
-  } catch (error) {}
-};
-
 const AdminStockPage = () => {
-  const [products, setProducts] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(5);
 
-  useEffect(() => {
-    (async () => await getProductsOfPage(currentPage, setProducts, setTotalPages))();
-  }, [currentPage]);
+  const { data, isLoading } = useProducts({ page, perPage });
+  const { products = null, totalCount = 0 } = data ?? {};
 
-  const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
-    event; // just to satisfy typescript :))
-    setCurrentPage(value);
+  const handlePageChange = (page: number) => setPage(page);
+  const handlePerPageChange = (perPage: number) => {
+    setPage(1);
+    setPerPage(perPage);
   };
 
   return (
@@ -86,17 +49,22 @@ const AdminStockPage = () => {
         </Button>
       </Box>
 
-      <StripedTable columns={tableColumns} rowsData={products} />
+      {isLoading && <LoadingSpinner />}
 
-      <Box sx={{ display: "flex", justifyContent: "center" }}>
+      {!products && !isLoading && <Typography textAlign='center'>محصولی وجود ندارد! یک محصول جدید اضافه کنید.</Typography>}
+
+      {products && !isLoading && (
         <Pagination
-          count={totalPages}
-          page={currentPage}
-          onChange={handlePageChange}
-          renderItem={item => <PaginationItem slots={{ previous: ArrowForwardIcon, next: ArrowBackIcon }} {...item} />}
-          sx={{ marginTop: 5 }}
-        />
-      </Box>
+          itemsTitle='محصول'
+          itemsCount={totalCount}
+          page={page}
+          perPage={perPage}
+          onPageChange={handlePageChange}
+          onPerPageChange={handlePerPageChange}
+        >
+          <StripedTable columns={tableColumns} rowsData={products} />
+        </Pagination>
+      )}
     </>
   );
 };
