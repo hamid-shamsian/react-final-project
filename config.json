@@ -1,4 +1,4 @@
 {
-  "API_BASE_URL": "http://localhost:8000/api",
-  "ACCESS_TOKEN_LIFETIME_SECONDS": 55
+  "API_BASE_URL": "http://192.168.2.190:5173/proxied/api",
+  "BACKEND_BASE_URL": "http://192.168.2.190:8000"
 }
