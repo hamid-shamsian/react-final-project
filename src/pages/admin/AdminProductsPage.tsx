@@ -1,12 +1,12 @@
 import { useState } from "react";
-import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import StripedTable from "../../components/widget/StripedTable";
-import config from "../../../config.json";
 import Pagination from "../../components/common/Pagination";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
 import useProducts, { Product } from "../../hooks/useProducts";
+import config from "../../../config.json";
 
 const tableColumns = [
   {
@@ -49,8 +49,8 @@ const AdminProductsPage = () => {
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(5);
 
-  const { data, isLoading } = useProducts({ page, perPage });
-  const { products = null, totalCount = 1 } = data ?? {};
+  const { data, isLoading } = useProducts({ page, perPage, richItems: true });
+  const { products = null, totalCount = 0 } = data ?? {};
 
   const handlePageChange = (page: number) => setPage(page);
   const handlePerPageChange = (perPage: number) => {

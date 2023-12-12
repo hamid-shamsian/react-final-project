@@ -21,37 +21,40 @@ export interface Product {
   _id: string;
 }
 
+interface ProductQuery {
+  page: number;
+  perPage: number;
+  richItems?: boolean;
+}
+
 interface ProductsData {
   products: Product[];
   totalCount: number;
 }
 
-const fetchProducts = async (page: number, perPage: number): Promise<ProductsData> => {
+const fetchProducts = async ({ page, perPage, richItems }: ProductQuery): Promise<ProductsData> => {
   const { data } = await productService.getProducts(page, perPage);
-  const { products } = data.data;
+  let { products } = data.data;
 
-  const subCategories = await Promise.all(
-    products.map((p: Product) => p.subcategory).map((subCatId: string) => subCatService.getSubCatById(subCatId))
-  );
+  if (richItems) {
+    const subCategories = await Promise.all(
+      products.map((p: Product) => p.subcategory).map((subCatId: string) => subCatService.getSubCatById(subCatId))
+    );
 
-  const richProductItems = products.map((p: Product, i: number) => ({
-    ...p,
-    category: subCategories[i].data.data.subcategory.category.name,
-    subcategory: subCategories[i].data.data.subcategory.name
-  }));
+    products = products.map((p: Product, i: number) => ({
+      ...p,
+      category: subCategories[i].data.data.subcategory.category.name,
+      subcategory: subCategories[i].data.data.subcategory.name
+    }));
+  }
 
-  return { products: richProductItems, totalCount: data.total };
+  return { products, totalCount: data.total };
 };
-
-interface ProductQuery {
-  page: number;
-  perPage: number;
-}
 
 const useProducts = (query: ProductQuery) =>
   useQuery<ProductsData, Error>({
     queryKey: ["products", query],
-    queryFn: () => fetchProducts(query.page, query.perPage),
+    queryFn: () => fetchProducts(query),
     placeholderData: prevData => prevData
   });
 
