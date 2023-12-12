@@ -1,20 +1,21 @@
 import { redirect } from "react-router-dom";
-import authService from "../services/authService";
+import userService from "../services/userService";
 
-const fromNoneLoggedInUsers = () => {
-  const user = authService.getStoredUser();
+// TODO: some protections dont work correctly due to authentication strategy changed (with cookies...) so change the route protection logic...
+const fromNoneLoggedInUsers = async () => {
+  const user = await userService.getLoggedInUser();
   if (!user) return redirect("/login");
   return null;
 };
 
-const fromLoggedInUsers = () => {
-  const user = authService.getStoredUser();
+const fromLoggedInUsers = async () => {
+  const user = await userService.getLoggedInUser();
   if (user) return redirect("/");
   return null;
 };
 
-const fromNoneAdminUsers = () => {
-  const user = authService.getStoredUser();
+const fromNoneAdminUsers = async () => {
+  const user = await userService.getLoggedInUser();
   if (user?.role !== "ADMIN") return redirect("/login");
   return null;
 };

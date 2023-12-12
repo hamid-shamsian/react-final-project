@@ -9,6 +9,7 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import StripedTable from "../../components/widget/StripedTable";
 import productService from "../../services/productService";
 import subCatService from "../../services/subCatService";
+import config from "../../../config.json";
 
 interface productType {
   category: string;
@@ -33,7 +34,9 @@ const tableColumns = [
   {
     label: "تصویر",
     key: "thumbnail",
-    content: (item: productType) => <img src={"http://localhost:8000/images/products/thumbnails/" + item.thumbnail} alt='thumbnail' width={100} />
+    content: (item: productType) => (
+      <img src={`${config.BACKEND_BASE_URL}/images/products/thumbnails/` + item.thumbnail} alt='thumbnail' width={100} />
+    )
   },
   {
     label: "محصول",
