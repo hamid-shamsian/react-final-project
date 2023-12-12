@@ -83,7 +83,14 @@ const refreshingAccessTokenHandler = async (error: AxiosError) => {
 // ===============================================================================================
 
 http.setCustomErrorHandling(refreshingAccessTokenHandler);
-renewAccessToken();
+
+(async () => {
+  try {
+    await renewAccessToken();
+  } catch (error) {}
+})();
+
+// ===============================================================================================
 
 const authService = {
   login,
