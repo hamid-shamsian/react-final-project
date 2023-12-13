@@ -5,45 +5,9 @@ import Button from "@mui/material/Button";
 import StripedTable from "../../components/widget/StripedTable";
 import Pagination from "../../components/common/Pagination";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
-import useProducts, { Product } from "../../hooks/useProducts";
-import config from "../../../config.json";
-
-const tableColumns = [
-  {
-    label: "تصویر",
-    key: "thumbnail",
-    content: (item: Product) => (
-      <img src={`${config.BACKEND_BASE_URL}/images/products/thumbnails/` + item.thumbnail} alt='thumbnail' width={100} height={100} />
-    )
-  },
-  {
-    label: "محصول",
-    path: "name"
-  },
-  {
-    label: "دسته‌بندی",
-    path: "cat",
-    content: (item: Product) => (
-      <Typography>
-        {item.category} / {item.subcategory}
-      </Typography>
-    )
-  },
-  {
-    label: "عملیات",
-    path: "actions",
-    content: (item: any) => (
-      <div id={item._id}>
-        <Button variant='contained' size='small' color='warning'>
-          ویرایش
-        </Button>
-        <Button variant='contained' size='small' color='error' sx={{ mr: 2 }}>
-          حذف
-        </Button>
-      </div>
-    )
-  }
-];
+import useProducts from "../../hooks/useProducts";
+import columns from "../../tablesColumns/adminProducts";
+import { Product } from "../../services/productService";
 
 const AdminProductsPage = () => {
   const [page, setPage] = useState(1);
@@ -56,6 +20,10 @@ const AdminProductsPage = () => {
   const handlePerPageChange = (perPage: number) => {
     setPage(1);
     setPerPage(perPage);
+  };
+
+  const handleDelete = (product: Product) => {
+    console.log("delete product", product);
   };
 
   return (
@@ -83,7 +51,7 @@ const AdminProductsPage = () => {
           onPageChange={handlePageChange}
           onPerPageChange={handlePerPageChange}
         >
-          <StripedTable columns={tableColumns} rowsData={products} />
+          <StripedTable columns={columns} rowsData={products} actions={{ delete: handleDelete }} />
         </Pagination>
       )}
     </>
