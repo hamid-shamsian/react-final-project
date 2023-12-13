@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import Box from "@mui/material/Box";
 import MuiPagination from "@mui/material/Pagination";
 import PaginationItem from "@mui/material/PaginationItem";
@@ -33,6 +33,10 @@ const Pagination = ({ children, itemsTitle, itemsCount, page, perPage, onPageCha
   const pagesCount = Math.ceil(itemsCount / perPage);
   const start = (page - 1) * perPage + 1;
   const end = Math.min(page * perPage, itemsCount);
+
+  useEffect(() => {
+    if (page > pagesCount) onPageChange(pagesCount);
+  }, [page, pagesCount]);
 
   return (
     <>

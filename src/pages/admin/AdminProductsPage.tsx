@@ -6,6 +6,7 @@ import StripedTable from "../../components/widget/StripedTable";
 import Pagination from "../../components/common/Pagination";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
 import useProducts from "../../hooks/useProducts";
+import useDeleteProduct from "../../hooks/useDeleteProduct";
 import columns from "../../tablesColumns/adminProducts";
 import { Product } from "../../services/productService";
 
@@ -16,15 +17,15 @@ const AdminProductsPage = () => {
   const { data, isLoading } = useProducts({ page, perPage, richItems: true });
   const { products = null, totalCount = 0 } = data ?? {};
 
+  const deleteProduct = useDeleteProduct();
+
   const handlePageChange = (page: number) => setPage(page);
   const handlePerPageChange = (perPage: number) => {
     setPage(1);
     setPerPage(perPage);
   };
 
-  const handleDelete = (product: Product) => {
-    console.log("delete product", product);
-  };
+  const handleDelete = (product: Product) => deleteProduct.mutate(product._id);
 
   return (
     <>

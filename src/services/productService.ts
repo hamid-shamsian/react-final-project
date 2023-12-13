@@ -32,8 +32,11 @@ const productEndpoint = config.API_BASE_URL + "/products";
 const getAll = (page: number = 1, limit: number = 5) =>
   http.get<GetAllProductsResponse>(`${productEndpoint}?limit=${limit}&page=${page}`).then(res => res.data);
 
+const deleteById = (id: string) => http.delete(`${productEndpoint}/${id}`).then(res => res.data);
+
 const productService = {
-  getAll
+  getAll,
+  deleteById
 };
 
 export default productService;
