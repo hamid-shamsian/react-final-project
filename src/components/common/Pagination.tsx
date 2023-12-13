@@ -41,7 +41,7 @@ const Pagination = ({ children, itemsTitle, itemsCount, page, perPage, onPageCha
           نمایش موارد ( {start} تا {end} ) از {itemsCount} {itemsTitle}:
         </Typography>
 
-        {pagesCount > 1 && (
+        {itemsCount > 5 && (
           <Box sx={{ display: "flex", alignItems: "center", gap: 3 }}>
             <InputLabel>تعداد در صفحه:</InputLabel>
             <FormControl size='small'>

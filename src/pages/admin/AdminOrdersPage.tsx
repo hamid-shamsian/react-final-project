@@ -1,37 +1,12 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
-// import DataTable from "../../components/widget/DataTable";
+import { useState } from "react";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import Pagination from "@mui/material/Pagination";
-import PaginationItem from "@mui/material/PaginationItem";
 import Button from "@mui/material/Button";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import RadioBtnGroup from "../../components/common/RadioBtnGroup";
+import Pagination from "../../components/common/Pagination";
+import LoadingSpinner from "../../components/common/LoadingSpinner";
 import StripedTable from "../../components/widget/StripedTable";
-import RadioBtnGroup from "./../../components/common/RadioBtnGroup";
-import orderService from "../../services/orderService";
-import userService from "../../services/userService";
-
-interface orderProductType {
-  product: string;
-  count: number;
-  _id: string;
-}
-
-interface orderType {
-  createdAt: string;
-  deliveryDate: string;
-  deliveryStatus: boolean;
-  products: orderProductType[];
-  totalPrice: number;
-  updatedAt: string;
-  user: string;
-  _id: string;
-}
-
-export interface richOrderType extends orderType {
-  userFullName: string;
-}
+import useOrders, { RichOrder } from "../../hooks/useOrders";
 
 const radioBtns = [
   { value: "not-delivered", label: "سفارش‌های در انتظار ارسال" },
@@ -55,7 +30,7 @@ const tableColumns = [
   {
     label: "عملیات",
     key: "actions",
-    content: (item: any) => (
+    content: (item: RichOrder) => (
       <div id={item._id}>
         <Button variant='outlined' size='small'>
           مشاهده جزییات
@@ -68,50 +43,26 @@ const tableColumns = [
   }
 ];
 
-const getOrdersOfPage = async (
-  page: number,
-  filter: string,
-  setOrdersCallBack: Dispatch<SetStateAction<never[]>>,
-  setTotalPagesCallBack: Dispatch<SetStateAction<number>>
-) => {
-  try {
-    const { data } = await orderService.getOrders(page, filter);
-
-    setTotalPagesCallBack(data.total_pages);
-    const { orders } = data.data;
-
-    const users = await Promise.all(orders.map((o: orderType) => o.user).map((userId: string) => userService.getUserById(userId)));
-
-    const userFullNames = users.map(u => u.data.data.user.firstname + " " + u.data.data.user.lastname);
-    const richOrderItems = orders.map((o: orderType, i: number) => ({ ...o, userFullName: userFullNames[i] }));
-
-    setOrdersCallBack(richOrderItems);
-  } catch (error) {}
-};
-
 const AdminOrdersPage = () => {
-  const [orders, setOrders] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(5);
   const [filter, setFilter] = useState("not-delivered");
 
-  useEffect(() => {
-    (async () => await getOrdersOfPage(currentPage, filter, setOrders, setTotalPages))();
-  }, [currentPage, filter]);
+  const { data, isLoading } = useOrders({ page, perPage, filter, richItems: true });
+  const { orders = null, totalCount = 0 } = data ?? {};
 
-  const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
-    event; // just to satisfy typescript :))
-    setCurrentPage(value);
+  const handlePageChange = (page: number) => setPage(page);
+  const handlePerPageChange = (perPage: number) => {
+    setPage(1);
+    setPerPage(perPage);
   };
-
   const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFilter((event.target as HTMLInputElement).value);
-    setCurrentPage(1);
+    setPage(1);
   };
 
-  const mappedRowsData = orders.map((order: richOrderType) => ({
+  const mappedRowsData = orders?.map(order => ({
     ...order,
-    id: order._id,
     createdAt: new Intl.DateTimeFormat("fa-IR").format(new Date(order.createdAt))
   }));
 
@@ -125,21 +76,24 @@ const AdminOrdersPage = () => {
         <RadioBtnGroup value={filter} onChange={handleFilterChange} options={radioBtns} />
       </Box>
 
-      <StripedTable columns={tableColumns} rowsData={mappedRowsData} />
+      {isLoading && <LoadingSpinner />}
 
-      <Box sx={{ display: "flex", justifyContent: "center" }}>
+      {!orders && !isLoading && <Typography textAlign='center'>هنوز سفارشی ندارید!</Typography>}
+
+      {mappedRowsData && !isLoading && (
         <Pagination
-          count={totalPages}
-          page={currentPage}
-          onChange={handlePageChange}
-          renderItem={item => <PaginationItem slots={{ previous: ArrowForwardIcon, next: ArrowBackIcon }} {...item} />}
-          sx={{ marginTop: 5 }}
-        />
-      </Box>
+          itemsTitle='سفارش'
+          itemsCount={totalCount}
+          page={page}
+          perPage={perPage}
+          onPageChange={handlePageChange}
+          onPerPageChange={handlePerPageChange}
+        >
+          <StripedTable columns={tableColumns} rowsData={mappedRowsData} />
+        </Pagination>
+      )}
     </>
   );
-
-  // return <DataTable rowsData={mappedRowsData} />;
 };
 
 export default AdminOrdersPage;
