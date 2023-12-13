@@ -4,9 +4,10 @@ import StyledTableCell from "../mui-customized/StyledTableCell";
 
 export interface ColumnType {
   label?: string;
-  content?: any;
+  content?: any; // be more specific later... (its so challenging...)
   path?: string;
   key?: string;
+  align?: "left" | "right" | "center";
 }
 
 interface TableHeaderProps {
@@ -18,7 +19,7 @@ const TableHeader = ({ columns }: TableHeaderProps) => {
     <TableHead>
       <TableRow>
         {columns.map(column => (
-          <StyledTableCell key={column.path ?? column.key} align='right'>
+          <StyledTableCell key={column.path ?? column.key} align={column.align ?? "center"}>
             {column.label}
           </StyledTableCell>
         ))}
