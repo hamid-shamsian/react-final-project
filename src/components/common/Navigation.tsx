@@ -2,7 +2,7 @@ import { List, ListItem, ListItemText } from "@mui/material";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import CustomNavLink from "./CustomNavLink";
-import useUserData from "./../../hooks/useUserData";
+import useUser from "../../hooks/useUser";
 
 const staticLinks = [
   { name: "خانه", href: "/" },
@@ -30,7 +30,7 @@ interface NavigationProps {
 }
 
 const Navigation = ({ onItemClick, layout = "column" }: NavigationProps) => {
-  const user = useUserData();
+  const user = useUser();
 
   const links = staticLinks.concat(!user ? loggedOutLinks : user.role === "ADMIN" ? adminLinks : userLinks);
 
