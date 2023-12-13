@@ -1,8 +1,9 @@
-import { List, ListItem, ListItemText } from "@mui/material";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
+import { List, ListItem, ListItemText, Box, Typography, Switch } from "@mui/material";
+import { useDispatch } from "react-redux";
 import CustomNavLink from "./CustomNavLink";
 import useUser from "../../hooks/useUser";
+import useTheme from "../../hooks/useTheme";
+import { themeActions } from "../../redux/features/themeSlice";
 
 const staticLinks = [
   { name: "خانه", href: "/" },
@@ -30,12 +31,19 @@ interface NavigationProps {
 }
 
 const Navigation = ({ onItemClick, layout = "column" }: NavigationProps) => {
+  const dispatch = useDispatch();
   const user = useUser();
+  const theme = useTheme();
 
   const links = staticLinks.concat(!user ? loggedOutLinks : user.role === "ADMIN" ? adminLinks : userLinks);
 
   return (
-    <Box sx={{ display: "flex", flexDirection: layout, alignItems: "center", gap: 10 }}>
+    <Box sx={{ display: "flex", flexDirection: layout, alignItems: "center", gap: layout === "row" ? 10 : 2 }}>
+      <Box sx={{ order: layout === "row" ? 0 : 1 }}>
+        <Typography variant='caption'>حالت شب</Typography>
+        <Switch checked={theme === "dark"} onChange={() => dispatch(themeActions.toggle())} />
+      </Box>
+
       <List component='nav' sx={{ display: "flex", flexDirection: layout, paddingLeft: layout === "row" ? 0 : 20 }}>
         {links.map((link, i) => (
           <ListItem key={i} onClick={onItemClick}>
