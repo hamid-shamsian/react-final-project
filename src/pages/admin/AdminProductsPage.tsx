@@ -5,6 +5,7 @@ import Button from "@mui/material/Button";
 import StripedTable from "../../components/widget/StripedTable";
 import Pagination from "../../components/common/Pagination";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
+import DeleteModal from "../../components/widget/DeleteModal";
 import useProducts from "../../hooks/useProducts";
 import useDeleteProduct from "../../hooks/useDeleteProduct";
 import columns from "../../tablesColumns/adminProducts";
@@ -13,6 +14,8 @@ import { Product } from "../../services/productService";
 const AdminProductsPage = () => {
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(5);
+
+  const [deleteModal, setDeleteModal] = useState({ open: false, id: "", name: "" });
 
   const { data, isLoading } = useProducts({ page, perPage, richItems: true });
   const { products = null, totalCount = 0 } = data ?? {};
@@ -25,7 +28,12 @@ const AdminProductsPage = () => {
     setPerPage(perPage);
   };
 
-  const handleDelete = (product: Product) => deleteProduct.mutate(product._id);
+  const handleConfirmDelete = (product: Product) => setDeleteModal({ open: true, id: product._id, name: product.name });
+  const handleCloseDeleteModal = () => setDeleteModal(prev => ({ ...prev, open: false })); // I didnt reset id and name properties because of fade-out animation while disappearing modal.
+  const handleDelete = (id: string) => {
+    deleteProduct.mutate(id);
+    handleCloseDeleteModal();
+  };
 
   return (
     <>
@@ -52,9 +60,11 @@ const AdminProductsPage = () => {
           onPageChange={handlePageChange}
           onPerPageChange={handlePerPageChange}
         >
-          <StripedTable columns={columns} rowsData={products} actions={{ delete: handleDelete }} />
+          <StripedTable columns={columns} rowsData={products} actions={{ delete: handleConfirmDelete }} />
         </Pagination>
       )}
+
+      <DeleteModal item='محصول' data={deleteModal} onConfirm={handleDelete} onCancel={handleCloseDeleteModal} />
     </>
   );
 };
