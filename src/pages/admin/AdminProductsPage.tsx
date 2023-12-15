@@ -6,6 +6,7 @@ import StripedTable from "../../components/widget/StripedTable";
 import Pagination from "../../components/common/Pagination";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
 import DeleteModal from "../../components/widget/DeleteModal";
+import ProductModal, { FormValues } from "../../components/widget/ProductModal";
 import useProducts from "../../hooks/useProducts";
 import useDeleteProduct from "../../hooks/useDeleteProduct";
 import columns from "../../tablesColumns/adminProducts";
@@ -16,6 +17,7 @@ const AdminProductsPage = () => {
   const [perPage, setPerPage] = useState(5);
 
   const [deleteModal, setDeleteModal] = useState({ open: false, id: "", name: "" });
+  const [productModal, setProductModal] = useState<{ open: boolean; product: Product | null }>({ open: false, product: null });
 
   const { data, isLoading } = useProducts({ page, perPage, richItems: true });
   const { products = null, totalCount = 0 } = data ?? {};
@@ -28,11 +30,18 @@ const AdminProductsPage = () => {
     setPerPage(perPage);
   };
 
-  const handleConfirmDelete = (product: Product) => setDeleteModal({ open: true, id: product._id, name: product.name });
+  const handleOpenDeleteModal = (product: Product) => setDeleteModal({ open: true, id: product._id, name: product.name });
   const handleCloseDeleteModal = () => setDeleteModal(prev => ({ ...prev, open: false })); // I didnt reset id and name properties because of fade-out animation while disappearing modal.
   const handleDelete = (id: string) => {
     deleteProduct.mutate(id);
     handleCloseDeleteModal();
+  };
+
+  const handleOpenProductModal = (product: Product | null = null) => setProductModal({ open: true, product });
+  const handleCloseProductModal = () => setProductModal({ open: false, product: null });
+  const handleAdd = (data: FormValues) => {
+    console.log(data);
+    handleCloseProductModal();
   };
 
   return (
@@ -42,7 +51,7 @@ const AdminProductsPage = () => {
           مدیریت محصولات
         </Typography>
 
-        <Button variant='contained' color='success'>
+        <Button variant='contained' color='success' onClick={() => handleOpenProductModal()}>
           افزودن محصول
         </Button>
       </Box>
@@ -60,11 +69,13 @@ const AdminProductsPage = () => {
           onPageChange={handlePageChange}
           onPerPageChange={handlePerPageChange}
         >
-          <StripedTable columns={columns} rowsData={products} actions={{ delete: handleConfirmDelete }} />
+          <StripedTable columns={columns} rowsData={products} actions={{ delete: handleOpenDeleteModal, edit: handleOpenProductModal }} />
         </Pagination>
       )}
 
-      <DeleteModal item='محصول' data={deleteModal} onConfirm={handleDelete} onCancel={handleCloseDeleteModal} />
+      <DeleteModal data={deleteModal} onConfirm={handleDelete} onCancel={handleCloseDeleteModal} item='محصول' />
+
+      <ProductModal data={productModal} onSubmit={handleAdd} onCancel={handleCloseProductModal} />
     </>
   );
 };
