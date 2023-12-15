@@ -1,9 +1,9 @@
 import { useEffect } from "react";
-import { useForm, Controller, SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "../../components/common/Modal";
-import RTLTextField from "../common/RTLTextField";
+import RHFTextField from "../common/RHFTextField";
 import { Product } from "../../services/productService";
 
 interface ProductModalProps {
@@ -11,7 +11,7 @@ interface ProductModalProps {
     open: boolean;
     product: Product | null;
   };
-  onSubmit: SubmitHandler<FormValues>; //(data: FormValues) => void;
+  onSubmit: (data: FormValues) => void;
   onCancel: () => void;
 }
 
@@ -19,6 +19,22 @@ export interface FormValues {
   name: string;
   price: number;
 }
+
+const inputs = {
+  name: { name: "name", label: "نام محصول", rules: { required: "نام محصول ضروری است" } },
+  price: {
+    name: "price",
+    label: "قیمت محصول",
+    type: "number",
+    rules: { required: "قیمت محصول ضروری است", min: { value: 0, message: "قیمت باید عدد مثبتی باشد" } }
+  },
+  quantity: {
+    name: "quantity",
+    label: "تعداد موجودی",
+    type: "number",
+    rules: { required: "موجودی محصول ضروری است", min: { value: 0, message: "موجودی باید عدد مثبتی باشد" } }
+  }
+};
 
 const ProductModal = ({ data, onSubmit, onCancel }: ProductModalProps) => {
   const { name = "", category = "", subcategory = "", price = 0, quantity = 0, description = "" } = data.product ?? {};
@@ -30,25 +46,14 @@ const ProductModal = ({ data, onSubmit, onCancel }: ProductModalProps) => {
   useEffect(() => reset(defaultValues), [data]);
 
   return (
-    <Modal open={data.open} onClose={onCancel}>
-      <form onSubmit={validateForm(onSubmit)}>
-        <Controller
-          name='name'
-          control={control}
-          rules={{ required: "نام محصول ضروری است" }}
-          render={({ field }) => (
-            <RTLTextField {...field} error={Boolean(errors.name)} label='نام محصول' helperText={errors.name?.message} fullWidth />
-          )}
-        />
+    <Modal open={data.open}>
+      <Box component='form' width={500} onSubmit={validateForm(onSubmit)}>
+        <RHFTextField {...inputs.name} error={errors} control={control} />
 
-        <Controller
-          name='price'
-          control={control}
-          rules={{ required: "قیمت محصول ضروری است", min: { value: 0, message: "قیمت باید عدد مثبتی باشد" } }}
-          render={({ field }) => (
-            <RTLTextField {...field} type='number' error={Boolean(errors.price)} label='قیمت محصول' helperText={errors.price?.message} fullWidth />
-          )}
-        />
+        <Box display='flex' mt={3} gap={3}>
+          <RHFTextField {...inputs.price} error={errors} control={control} />
+          <RHFTextField {...inputs.quantity} error={errors} control={control} />
+        </Box>
 
         <Box sx={{ mt: 4 }}>
           <Button type='submit' variant='contained' color='success'>
@@ -58,7 +63,7 @@ const ProductModal = ({ data, onSubmit, onCancel }: ProductModalProps) => {
             انصراف
           </Button>
         </Box>
-      </form>
+      </Box>
     </Modal>
   );
 };
