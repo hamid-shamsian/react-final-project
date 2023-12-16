@@ -1,5 +1,5 @@
-import { FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -10,32 +10,36 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
-import { toast } from "react-toastify";
 import CustomLink from "../components/common/CustomLink";
-import RTLTextField from "../components/common/RTLTextField";
+import RichRHFTextField from "../components/common/RichRHFTextField";
+import PasswordInput from "../components/common/PasswordInput";
 import authService from "../services/authService";
 import { userActions } from "../redux/features/userSlice";
 import loginImage from "../assets/images/login.webp";
+
+interface FormValues {
+  username: string;
+  password: string;
+}
 
 const LoginPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const { username, password } = e.currentTarget;
+  // prettier-ignore
+  const { control, handleSubmit: validateForm, formState: {errors} } = useForm<FormValues>({ defaultValues: { username: '', password: '' }});
 
-    if (username.value && password.value) {
-      try {
-        const user = await authService.login(username.value, password.value);
+  const handleSubmit = async (data: FormValues) => {
+    const { username, password } = data;
 
-        dispatch(userActions.setUser(user));
-        if (user.role === "ADMIN") navigate("/admin");
-        else navigate("/");
-      } catch (error) {}
-    } else {
-      toast.warn("لطفا فیلدهای نام‌کاربری و کلمه‌عبور را پر کنید!");
-    }
+    try {
+      const user = await authService.login(username, password);
+
+      dispatch(userActions.setUser(user));
+
+      if (user.role === "ADMIN") navigate("/admin");
+      else navigate("/");
+    } catch (error) {}
   };
 
   return (
@@ -64,19 +68,17 @@ const LoginPage = () => {
             ورود
           </Typography>
 
-          <Box component='form' noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
-            <RTLTextField margin='normal' required fullWidth id='username' label='نام کاربری' name='username' autoComplete='username' autoFocus />
-
-            <RTLTextField
-              margin='normal'
-              required
-              fullWidth
-              name='password'
-              label='کلمه عبور'
-              type='password'
-              id='password'
-              autoComplete='current-password'
+          <Box component='form' onSubmit={validateForm(handleSubmit)} sx={{ mt: 1 }}>
+            <RichRHFTextField
+              name='username'
+              label='نام کاربری'
+              error={errors}
+              control={control}
+              rules={{ required: "نام کاربری را وارد کنید" }}
+              autoFocus
             />
+
+            <PasswordInput name='password' error={errors} control={control} rules={{ required: "کلمه عبور را وارد کنید" }} />
 
             <FormControlLabel control={<Checkbox value='remember' color='primary' />} label='مرا بخاطر بسپار' sx={{ mr: 0 }} />
 
