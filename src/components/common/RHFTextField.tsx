@@ -8,7 +8,9 @@ interface RHFTextFieldProps {
   rules: any;
   error: any;
   control: Control<any, any>;
-  InputProps: any;
+  InputProps?: any;
+  select?: boolean;
+  children?: any;
 }
 
 const RHFTextField = ({ name, rules, error, control, ...restProps }: RHFTextFieldProps) => {

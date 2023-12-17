@@ -4,7 +4,9 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "../../components/common/Modal";
 import RichRHFTextField from "../common/RichRHFTextField";
+import RHFSelect from "../common/RHFSelect";
 import { Product } from "../../services/productService";
+import useCategories from "../../hooks/useCategories";
 
 interface ProductModalProps {
   data: {
@@ -18,6 +20,9 @@ interface ProductModalProps {
 export interface FormValues {
   name: string;
   price: number;
+  quantity: number;
+  category: string;
+  subcategory: string;
 }
 
 const inputs = {
@@ -35,6 +40,16 @@ const inputs = {
     unit: "عدد",
     type: "number",
     rules: { required: "موجودی محصول ضروری است", min: { value: 0, message: "موجودی باید عدد مثبتی باشد" } }
+  },
+  category: {
+    name: "category",
+    label: "گروه",
+    rules: { required: "گروه محصول ضروری است" }
+  },
+  subcategory: {
+    name: "subcategory",
+    label: "زیر گروه",
+    rules: { required: "زیر گروه محصول ضروری است" }
   }
 };
 
@@ -43,14 +58,29 @@ const ProductModal = ({ data, onSubmit, onCancel }: ProductModalProps) => {
   const defaultValues = { name, category, subcategory, price, quantity, description };
 
   // prettier-ignore
-  const { control, handleSubmit: validateForm, reset, formState: {errors} } = useForm<FormValues>({ defaultValues });
+  const { control, handleSubmit: validateForm, reset, formState: { errors }, watch } = useForm<FormValues>({ defaultValues });
+  const selectedCat = watch("category");
 
   useEffect(() => reset(defaultValues), [data]);
+
+  const { data: categories } = useCategories();
 
   return (
     <Modal open={data.open}>
       <Box component='form' width={500} onSubmit={validateForm(onSubmit)}>
         <RichRHFTextField {...inputs.name} error={errors} control={control} />
+
+        <Box display='flex' gap={3}>
+          <RHFSelect {...inputs.category} options={categories} error={errors} control={control} />
+          {selectedCat && (
+            <RHFSelect
+              {...inputs.subcategory}
+              options={categories?.find(c => c._id === selectedCat)?.subcategories}
+              error={errors}
+              control={control}
+            />
+          )}
+        </Box>
 
         <Box display='flex' gap={3}>
           <RichRHFTextField {...inputs.price} error={errors} control={control} />

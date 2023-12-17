@@ -8,7 +8,11 @@ const RTLTextField = styled(TextField)({
     right: "1.75rem !important",
     overflow: "unset"
   },
-  "& legend": { textAlign: "right" }
+  "& legend": { textAlign: "right" },
+  "& .MuiSelect-icon": {
+    left: 10, // Set the left position as needed
+    right: "unset !important"
+  }
 });
 
 export default RTLTextField;

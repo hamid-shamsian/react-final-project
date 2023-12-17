@@ -12,14 +12,14 @@ interface RichRHFTextFieldProps {
   autoFocus?: boolean;
 }
 
-const RichRHFTextField = ({ unit, control, rules, ...restProps }: RichRHFTextFieldProps) => {
+const RichRHFTextField = ({ unit, ...restProps }: RichRHFTextFieldProps) => {
   const adornment = unit
     ? {
         endAdornment: <InputAdornment position='end'>{unit}</InputAdornment>
       }
     : {};
 
-  return <RHFTextField control={control} rules={rules} {...restProps} InputProps={adornment} />;
+  return <RHFTextField {...restProps} InputProps={adornment} />;
 };
 
 export default RichRHFTextField;
