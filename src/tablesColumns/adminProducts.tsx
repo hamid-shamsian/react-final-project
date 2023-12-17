@@ -21,7 +21,7 @@ const tableColumns = [
     key: "cat",
     content: (product: Product) => (
       <Typography>
-        {product.category} / {product.subcategory}
+        {product.categoryName} / {product.subcategoryName}
       </Typography>
     )
   },

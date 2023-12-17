@@ -18,7 +18,11 @@ const fetchProducts = async ({ page, perPage, richItems }: ProductQuery): Promis
 
   if (richItems) {
     const subCategories = await Promise.all(products.map((p: Product) => p.subcategory).map((subCatId: string) => subCatService.getById(subCatId)));
-    products = products.map((p: Product, i: number) => ({ ...p, category: subCategories[i].category.name, subcategory: subCategories[i].name }));
+    products = products.map((p: Product, i: number) => ({
+      ...p,
+      categoryName: subCategories[i].category.name,
+      subcategoryName: subCategories[i].name
+    }));
   }
 
   return { products, totalCount: total };

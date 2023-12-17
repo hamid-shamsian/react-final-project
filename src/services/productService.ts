@@ -3,6 +3,7 @@ import config from "../../config.json";
 
 export interface Product {
   category: string;
+  categoryName?: string;
   createdAt: string;
   description: string;
   images: string[];
@@ -15,6 +16,7 @@ export interface Product {
   };
   slugname: string;
   subcategory: string;
+  subcategoryName?: string;
   thumbnail: string;
   updatedAt: string;
   _id: string;
