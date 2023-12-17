@@ -20,7 +20,7 @@ const Box = styled(MuiBox)(({ theme }) => ({
   border: "2px solid " + (theme.palette.mode === "light" ? "#000" : "#fff"),
   borderRadius: 7,
   boxShadow: "0 0 5px #000",
-  padding: 35
+  padding: 25
 }));
 
 const Backdrop = styled(MuiBackdrop)({

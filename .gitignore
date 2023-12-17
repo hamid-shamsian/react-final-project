@@ -17,6 +17,8 @@ favicon.ico
 *.jpg
 *.webp
 
+tinymce/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
