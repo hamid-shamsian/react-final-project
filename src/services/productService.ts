@@ -22,26 +22,34 @@ export interface Product {
   _id: string;
 }
 
-interface GetAllProductsResponse {
+interface GetAllResponse {
   page: number;
   per_page: number;
   products: Product[];
   total: number;
 }
 
+interface EditingData {
+  id: string;
+  product: FormData;
+}
+
 const productEndpoint = config.API_BASE_URL + "/products";
 
 const getAll = (page: number = 1, limit: number = 5) =>
-  http.get<GetAllProductsResponse>(`${productEndpoint}?limit=${limit}&page=${page}`).then(res => res.data);
+  http.get<GetAllResponse>(`${productEndpoint}?limit=${limit}&page=${page}`).then(res => res.data);
 
-const addProduct = (product: FormData) => http.post(productEndpoint, product);
+const addNew = (product: FormData) => http.post(productEndpoint, product);
 
 const deleteById = (id: string) => http.delete(`${productEndpoint}/${id}`).then(res => res.data);
 
+const editById = ({ id, product }: EditingData) => http.patch<Product>(`${productEndpoint}/${id}`, product).then(res => res.data);
+
 const productService = {
   getAll,
-  addProduct,
-  deleteById
+  addNew,
+  deleteById,
+  editById
 };
 
 export default productService;

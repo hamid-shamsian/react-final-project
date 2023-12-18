@@ -1,15 +1,15 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import productService from "../services/productService";
 
-const useAddProduct = () => {
+const useEditProduct = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: productService.addNew,
+    mutationFn: productService.editById,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
     }
   });
 };
 
-export default useAddProduct;
+export default useEditProduct;
