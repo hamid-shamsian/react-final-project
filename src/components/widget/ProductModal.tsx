@@ -6,16 +6,18 @@ import Typography from "@mui/material/Typography";
 import Modal from "../../components/common/Modal";
 import RichRHFTextField from "../common/RichRHFTextField";
 import RHFSelect from "../common/RHFSelect";
+import ImageInput from "../common/ImageInput";
 import TinyMCE from "./TinyMCE";
 import { Product } from "../../services/productService";
-import useCategories from "../../hooks/useCategories";
+import { Category } from "../../services/catService";
 
 interface ProductModalProps {
   data: {
     open: boolean;
     product: Product | null;
   };
-  onSubmit: (data: FormValues) => void;
+  categories?: Category[];
+  onSubmit: (data: FormData) => void;
   onCancel: () => void;
 }
 
@@ -26,6 +28,9 @@ export interface FormValues {
   category: string;
   subcategory: string;
   description: string;
+  thumbnail: File;
+  images: File[];
+  [key: string]: any;
 }
 
 const inputs = {
@@ -56,23 +61,38 @@ const inputs = {
   }
 };
 
-const ProductModal = ({ data, onSubmit, onCancel }: ProductModalProps) => {
-  const { name = "", category = "", subcategory = "", price = 0, quantity = 0, description = "" } = data.product ?? {};
+const ProductModal = ({ data, categories = [], onSubmit, onCancel }: ProductModalProps) => {
+  const { name = "", category = "", subcategory = "", price = "" as any, quantity = "" as any, description = "" } = data.product ?? {};
   const defaultValues = { name, category, subcategory, price, quantity };
 
   // prettier-ignore
-  const { control, handleSubmit: validateForm, reset, formState: { errors }, watch } = useForm<FormValues>({ defaultValues });
-  const selectedCat = watch("category");
+  const { control, handleSubmit: validateForm, reset, formState: { errors }, watch, setValue } = useForm<FormValues>({ defaultValues });
+
+  const selectedCat = watch("category") || defaultValues.category;
+
+  const subCatOptions = categories.find(c => c._id === selectedCat)?.subcategories ?? [];
+
+  useEffect(() => {
+    setValue("subcategory", "");
+  }, [selectedCat]);
 
   useEffect(() => reset(defaultValues), [data]);
 
-  const { data: categories } = useCategories();
-
   const editorRef = useRef<any>(null);
+  const thumbImageRef = useRef<any>(null);
+  const mainImagesRef = useRef<any>(null);
 
   const handleSubmit = (data: FormValues) => {
-    data.description = editorRef.current?.getContent();
-    onSubmit(data);
+    data.description = editorRef.current?.getContent() || "<p></p>";
+    data.thumbnail = thumbImageRef.current?.getImages()[0];
+
+    const formData = new FormData();
+    for (const key in data) formData.append(key, data[key]);
+
+    data.images = mainImagesRef.current?.getImages();
+    data.images.forEach((img: File) => formData.append("images", img));
+
+    onSubmit(formData);
   };
 
   return (
@@ -82,27 +102,26 @@ const ProductModal = ({ data, onSubmit, onCancel }: ProductModalProps) => {
           {data.product ? "ویرایش محصول" : "محصول جدید"}
         </Typography>
 
-        <Box overflow='auto' marginY={2}>
+        <Box overflow='auto' marginY={2} paddingLeft={2}>
           <RichRHFTextField {...inputs.name} error={errors} control={control} />
 
           <Box display='flex' gap={3}>
             <RHFSelect {...inputs.category} options={categories} error={errors} control={control} />
-            {selectedCat && (
-              <RHFSelect
-                {...inputs.subcategory}
-                options={categories?.find(c => c._id === selectedCat)?.subcategories}
-                error={errors}
-                control={control}
-              />
-            )}
+            {selectedCat && <RHFSelect {...inputs.subcategory} options={subCatOptions} error={errors} control={control} />}
           </Box>
+
+          <ImageInput title='تصویر انگشتی' ref={thumbImageRef} />
 
           <Box display='flex' gap={3} mb={2}>
             <RichRHFTextField {...inputs.price} error={errors} control={control} />
             <RichRHFTextField {...inputs.quantity} error={errors} control={control} />
           </Box>
 
-          <TinyMCE ref={editorRef} initialValue={description} />
+          <ImageInput title='تصاویر محصول' multiple ref={mainImagesRef} />
+
+          <Box mt={3}>
+            <TinyMCE ref={editorRef} initialValue={description} />
+          </Box>
         </Box>
 
         <Box>

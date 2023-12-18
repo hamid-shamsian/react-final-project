@@ -6,9 +6,11 @@ import StripedTable from "../../components/widget/StripedTable";
 import Pagination from "../../components/common/Pagination";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
 import DeleteModal from "../../components/widget/DeleteModal";
-import ProductModal, { FormValues } from "../../components/widget/ProductModal";
+import ProductModal from "../../components/widget/ProductModal";
 import useProducts from "../../hooks/useProducts";
+import useAddProduct from "../../hooks/useAddProduct";
 import useDeleteProduct from "../../hooks/useDeleteProduct";
+import useCategories from "../../hooks/useCategories";
 import columns from "../../tablesColumns/adminProducts";
 import { Product } from "../../services/productService";
 
@@ -22,7 +24,10 @@ const AdminProductsPage = () => {
   const { data, isLoading } = useProducts({ page, perPage, richItems: true });
   const { products = null, totalCount = 0 } = data ?? {};
 
+  const addProduct = useAddProduct();
   const deleteProduct = useDeleteProduct();
+
+  const { data: categories } = useCategories();
 
   const handlePageChange = (page: number) => setPage(page);
   const handlePerPageChange = (perPage: number) => {
@@ -39,8 +44,9 @@ const AdminProductsPage = () => {
 
   const handleOpenProductModal = (product: Product | null = null) => setProductModal({ open: true, product });
   const handleCloseProductModal = () => setProductModal({ open: false, product: null });
-  const handleAdd = (data: FormValues) => {
-    console.log(data);
+  const handleAdd = (data: FormData) => {
+    // console.log(data);
+    addProduct.mutate(data);
     handleCloseProductModal();
   };
 
@@ -75,7 +81,7 @@ const AdminProductsPage = () => {
 
       <DeleteModal data={deleteModal} onConfirm={handleDelete} onCancel={handleCloseDeleteModal} item='محصول' />
 
-      <ProductModal data={productModal} onSubmit={handleAdd} onCancel={handleCloseProductModal} />
+      <ProductModal data={productModal} categories={categories} onSubmit={handleAdd} onCancel={handleCloseProductModal} />
     </>
   );
 };
