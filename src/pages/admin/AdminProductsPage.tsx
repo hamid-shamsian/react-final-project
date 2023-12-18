@@ -10,6 +10,7 @@ import ProductModal from "../../components/widget/ProductModal";
 import useProducts from "../../hooks/useProducts";
 import useAddProduct from "../../hooks/useAddProduct";
 import useDeleteProduct from "../../hooks/useDeleteProduct";
+import useEditProduct from "../../hooks/useEditProduct";
 import useCategories from "../../hooks/useCategories";
 import columns from "../../tablesColumns/adminProducts";
 import { Product } from "../../services/productService";
@@ -26,6 +27,7 @@ const AdminProductsPage = () => {
 
   const addProduct = useAddProduct();
   const deleteProduct = useDeleteProduct();
+  const editProduct = useEditProduct();
 
   const { data: categories } = useCategories();
 
@@ -37,6 +39,7 @@ const AdminProductsPage = () => {
 
   const handleOpenDeleteModal = (product: Product) => setDeleteModal({ open: true, id: product._id, name: product.name });
   const handleCloseDeleteModal = () => setDeleteModal(prev => ({ ...prev, open: false })); // I didnt reset id and name properties because of fade-out animation while disappearing modal.
+
   const handleDelete = (id: string) => {
     deleteProduct.mutate(id);
     handleCloseDeleteModal();
@@ -44,9 +47,10 @@ const AdminProductsPage = () => {
 
   const handleOpenProductModal = (product: Product | null = null) => setProductModal({ open: true, product });
   const handleCloseProductModal = () => setProductModal({ open: false, product: null });
-  const handleAdd = (data: FormData) => {
-    // console.log(data);
-    addProduct.mutate(data);
+
+  const handleSubmit = (data: FormData) => {
+    if (productModal.product) editProduct.mutate({ id: productModal.product._id, product: data });
+    else addProduct.mutate(data);
     handleCloseProductModal();
   };
 
@@ -81,7 +85,7 @@ const AdminProductsPage = () => {
 
       <DeleteModal data={deleteModal} onConfirm={handleDelete} onCancel={handleCloseDeleteModal} item='محصول' />
 
-      <ProductModal data={productModal} categories={categories} onSubmit={handleAdd} onCancel={handleCloseProductModal} />
+      <ProductModal data={productModal} categories={categories} onSubmit={handleSubmit} onCancel={handleCloseProductModal} />
     </>
   );
 };

@@ -76,15 +76,15 @@ const ImageInput = forwardRef(({ title, multiple = false }: ImageInputProps, ref
   const uniqueId = String(Math.random());
 
   return (
-    <Box sx={{ border: "1px solid #bbb", borderRadius: 1, padding: 2, mt: 2, mb: 1 }}>
+    <Box sx={{ border: "1px solid #bbb", borderRadius: 1, padding: 2, mb: 3 }}>
       <Box sx={{ display: "flex", alignItems: "center", gap: 5 }}>
-        {title && <Typography>{title}</Typography>}
-        <label htmlFor={uniqueId} style={{ display: "flex", alignItems: "center" }}>
+        {title && <Typography>{title}:</Typography>}
+        <label htmlFor={uniqueId} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flex: 1 }}>
           <Input id={uniqueId} type='file' inputProps={{ multiple }} onChange={handleImageChange} sx={{ display: "none" }} />
-          <Button variant='outlined' component='span' endIcon={<CloudUploadIcon sx={{ mr: 2 }} />} sx={{ marginLeft: 5 }}>
+          <span style={{ fontSize: 13 }}>{selectedImages.length > 0 ? `${selectedImages.length} تصویر انتخاب شده` : "تصویری انتخاب نشده"}</span>
+          <Button variant='outlined' component='span' endIcon={<CloudUploadIcon sx={{ mr: 2 }} />} sx={{ marginRight: 3 }}>
             انتخاب تصویر
           </Button>
-          <span style={{ fontSize: 13 }}>{selectedImages.length > 0 ? `${selectedImages.length} تصویر انتخاب شده` : "تصویری انتخاب نشده"}</span>
         </label>
       </Box>
 

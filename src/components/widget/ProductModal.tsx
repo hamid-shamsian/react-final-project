@@ -84,13 +84,15 @@ const ProductModal = ({ data, categories = [], onSubmit, onCancel }: ProductModa
 
   const handleSubmit = (data: FormValues) => {
     data.description = editorRef.current?.getContent() || "<p></p>";
-    data.thumbnail = thumbImageRef.current?.getImages()[0];
+
+    const thumbnail = thumbImageRef.current?.getImages()[0];
+    if (thumbnail) data.thumbnail = thumbnail;
 
     const formData = new FormData();
     for (const key in data) formData.append(key, data[key]);
 
-    data.images = mainImagesRef.current?.getImages();
-    data.images.forEach((img: File) => formData.append("images", img));
+    const images = mainImagesRef.current?.getImages();
+    if (images.length) images.forEach((img: File) => formData.append("images", img));
 
     onSubmit(formData);
   };
@@ -110,13 +112,12 @@ const ProductModal = ({ data, categories = [], onSubmit, onCancel }: ProductModa
             {selectedCat && <RHFSelect {...inputs.subcategory} options={subCatOptions} error={errors} control={control} />}
           </Box>
 
-          <ImageInput title='تصویر انگشتی' ref={thumbImageRef} />
-
           <Box display='flex' gap={3} mb={2}>
             <RichRHFTextField {...inputs.price} error={errors} control={control} />
             <RichRHFTextField {...inputs.quantity} error={errors} control={control} />
           </Box>
 
+          <ImageInput title='تصویر انگشتی' ref={thumbImageRef} />
           <ImageInput title='تصاویر محصول' multiple ref={mainImagesRef} />
 
           <Box mt={3}>
