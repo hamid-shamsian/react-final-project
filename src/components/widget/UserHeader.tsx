@@ -7,7 +7,7 @@ function UserHeader() {
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   return (
-    <AppBar position='static'>
+    <AppBar position='sticky'>
       <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
         <Typography variant='h4' component='h1'>
           گیک‌شاپ
