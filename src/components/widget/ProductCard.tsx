@@ -8,6 +8,7 @@ import IconButton from "@mui/material/IconButton";
 import Rating from "@mui/material/Rating";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import { Product } from "../../services/productService";
+import { farsify } from "../../utils/utilityFuncs";
 import config from "../../../config.json";
 
 interface ProductCardProps {
@@ -26,7 +27,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
             </Typography>
           </CardContent>
           <Typography sx={{ flexGrow: 1 }} variant='body2' paddingX={2}>
-            {product.price} تومان
+            {farsify(product.price)} تومان
           </Typography>
         </Box>
         <CardActions sx={{ display: "flex", justifyContent: "end", position: "absolute", left: 0, bottom: 0 }}>

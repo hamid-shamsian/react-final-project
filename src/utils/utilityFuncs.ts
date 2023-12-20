@@ -14,3 +14,16 @@ export const updatePaginationParams = (prev: URLSearchParams, page: number, perP
 //   updated.set(key, String(value));
 //   return updated;
 // };
+
+const farsiNumbers = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
+
+export const farsify = (number: number) => {
+  const stringified = String(number);
+  const result = [];
+
+  for (const char of stringified) {
+    result.push(farsiNumbers[+char]);
+  }
+
+  return result.join("");
+};
