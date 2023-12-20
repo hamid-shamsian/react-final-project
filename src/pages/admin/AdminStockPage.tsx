@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
@@ -8,6 +9,7 @@ import LoadingSpinner from "../../components/common/LoadingSpinner";
 import useProducts from "../../hooks/useProducts";
 import useEditProduct from "../../hooks/useEditProduct";
 import tableColumns from "../../tablesColumns/adminStock";
+import { updatePaginationParams } from "../../utils/utilityFuncs";
 
 interface InputsData {
   touched: boolean;
@@ -15,8 +17,20 @@ interface InputsData {
 }
 
 const AdminStockPage = () => {
-  const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(5);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const getSearchedPage = () => {
+    const p = parseInt(searchParams.get("page") ?? "1");
+    return p && !isNaN(p) ? p : 1;
+  };
+
+  const getSearchedPerPage = () => {
+    const p = parseInt(searchParams.get("perPage") ?? "1");
+    return p && !isNaN(p) && [5, 10, 20, 50].includes(p) ? p : 5;
+  };
+
+  const [page, setPage] = useState(getSearchedPage());
+  const [perPage, setPerPage] = useState(getSearchedPerPage());
 
   const { data, isLoading } = useProducts({ page, perPage });
   const { products = [], totalCount = 0 } = data ?? {};
@@ -28,6 +42,10 @@ const AdminStockPage = () => {
     setPage(1);
     setPerPage(perPage);
   };
+
+  useEffect(() => {
+    setSearchParams(prev => updatePaginationParams(prev, page, perPage));
+  }, [page, perPage]);
 
   const [quantities, setQuantities] = useState<InputsData[]>([] as InputsData[]);
   const [prices, setPrices] = useState<InputsData[]>([] as InputsData[]);
@@ -99,9 +117,11 @@ const AdminStockPage = () => {
 
       {isLoading && <LoadingSpinner />}
 
-      {!products.length && !isLoading && <Typography textAlign='center'>محصولی وجود ندارد! یک محصول جدید اضافه کنید.</Typography>}
+      {page === 1 && !products.length && !isLoading && <Typography textAlign='center'>محصولی وجود ندارد! یک محصول جدید اضافه کنید.</Typography>}
 
-      {products.length && !isLoading && (
+      {page > 1 && !products.length && !isLoading && <Typography textAlign='center'>صفحه مورد نظر پیدا نشد!</Typography>}
+
+      {products.length > 0 && !isLoading && (
         <Pagination
           itemsTitle='محصول'
           itemsCount={totalCount}
