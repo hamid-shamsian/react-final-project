@@ -2,46 +2,12 @@ import { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import InputBase from "@mui/material/InputBase";
 import StripedTable from "../../components/widget/StripedTable";
 import Pagination from "../../components/common/Pagination";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
 import useProducts from "../../hooks/useProducts";
 import useEditProduct from "../../hooks/useEditProduct";
-
-const tableColumns = [
-  {
-    label: "نام محصول",
-    path: "name"
-    // align: "right"
-  },
-  {
-    label: "موجودی در انبار (عدد)",
-    key: "qty",
-    content: (product: any, { onQtyChange, quantities }: any) => (
-      <InputBase
-        type='number'
-        name={product.i}
-        value={quantities[product.i]?.value ?? ""}
-        onChange={onQtyChange}
-        sx={{ px: 2, width: 150, ...(quantities[product.i]?.touched && { backgroundColor: "#000", color: "#fff" }) }}
-      />
-    )
-  },
-  {
-    label: "قیمت محصول (تومان)",
-    key: "price",
-    content: (product: any, { onPriceChange, prices }: any) => (
-      <InputBase
-        type='number'
-        name={product.i}
-        value={prices[product.i]?.value ?? ""}
-        onChange={onPriceChange}
-        sx={{ px: 2, width: 150, ...(prices[product.i]?.touched && { backgroundColor: "#000", color: "#fff" }) }}
-      />
-    )
-  }
-];
+import tableColumns from "../../tablesColumns/adminStock";
 
 interface InputsData {
   touched: boolean;
