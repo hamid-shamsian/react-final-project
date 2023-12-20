@@ -29,9 +29,9 @@ interface GetAllResponse {
   total: number;
 }
 
-interface EditingData {
+export interface EditingData {
   id: string;
-  product: FormData;
+  product: Object;
 }
 
 const productEndpoint = config.API_BASE_URL + "/products";
