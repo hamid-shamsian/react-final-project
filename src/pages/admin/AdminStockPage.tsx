@@ -55,7 +55,11 @@ const AdminStockPage = () => {
     setPrices(products.map(p => ({ touched: false, value: p.price })));
   };
 
-  useEffect(init, [products]);
+  useEffect(() => {
+    init();
+    window.addEventListener("keydown", handleKeyPress);
+    return () => window.removeEventListener("keydown", handleKeyPress);
+  }, [products]);
 
   const onQtyChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(target.value);
@@ -88,11 +92,6 @@ const AdminStockPage = () => {
   };
 
   const handleKeyPress = (event: KeyboardEvent) => event.key === "Escape" && init();
-
-  useEffect(() => {
-    window.addEventListener("keydown", handleKeyPress);
-    return () => window.removeEventListener("keydown", handleKeyPress);
-  }, []);
 
   const someInputsChanged = quantities.some(q => q.touched) || prices.some(p => p.touched);
 
