@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
@@ -12,18 +13,31 @@ import useAddProduct from "../../hooks/useAddProduct";
 import useDeleteProduct from "../../hooks/useDeleteProduct";
 import useEditProduct from "../../hooks/useEditProduct";
 import useCategories from "../../hooks/useCategories";
-import columns from "../../tablesColumns/adminProducts";
+import tableColumns from "../../tablesColumns/adminProducts";
 import { Product } from "../../services/productService";
+import { updatePaginationParams } from "../../utils/utilityFuncs";
 
 const AdminProductsPage = () => {
-  const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(5);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const getSearchedPage = () => {
+    const p = parseInt(searchParams.get("page") ?? "1");
+    return p && !isNaN(p) ? p : 1;
+  };
+
+  const getSearchedPerPage = () => {
+    const p = parseInt(searchParams.get("perPage") ?? "1");
+    return p && !isNaN(p) && [5, 10, 20, 50].includes(p) ? p : 5;
+  };
+
+  const [page, setPage] = useState(getSearchedPage());
+  const [perPage, setPerPage] = useState(getSearchedPerPage());
 
   const [deleteModal, setDeleteModal] = useState({ open: false, id: "", name: "" });
   const [productModal, setProductModal] = useState<{ open: boolean; product: Product | null }>({ open: false, product: null });
 
   const { data, isLoading } = useProducts({ page, perPage, richItems: true });
-  const { products = null, totalCount = 0 } = data ?? {};
+  const { products = [], totalCount = 0 } = data ?? {};
 
   const addProduct = useAddProduct();
   const deleteProduct = useDeleteProduct();
@@ -36,6 +50,10 @@ const AdminProductsPage = () => {
     setPage(1);
     setPerPage(perPage);
   };
+
+  useEffect(() => {
+    setSearchParams(prev => updatePaginationParams(prev, page, perPage));
+  }, [page, perPage]);
 
   const handleOpenDeleteModal = (product: Product) => setDeleteModal({ open: true, id: product._id, name: product.name });
   const handleCloseDeleteModal = () => setDeleteModal(prev => ({ ...prev, open: false })); // I didnt reset id and name properties because of fade-out animation while disappearing modal.
@@ -68,9 +86,11 @@ const AdminProductsPage = () => {
 
       {isLoading && <LoadingSpinner />}
 
-      {!products && !isLoading && <Typography textAlign='center'>محصولی وجود ندارد! یک محصول جدید اضافه کنید.</Typography>}
+      {page === 1 && !products.length && !isLoading && <Typography textAlign='center'>محصولی وجود ندارد! یک محصول جدید اضافه کنید.</Typography>}
 
-      {products && !isLoading && (
+      {page > 1 && !products.length && !isLoading && <Typography textAlign='center'>صفحه مورد نظر پیدا نشد!</Typography>}
+
+      {products.length > 0 && !isLoading && (
         <Pagination
           itemsTitle='محصول'
           itemsCount={totalCount}
@@ -79,7 +99,7 @@ const AdminProductsPage = () => {
           onPageChange={handlePageChange}
           onPerPageChange={handlePerPageChange}
         >
-          <StripedTable columns={columns} rowsData={products} actions={{ delete: handleOpenDeleteModal, edit: handleOpenProductModal }} />
+          <StripedTable columns={tableColumns} rowsData={products} actions={{ delete: handleOpenDeleteModal, edit: handleOpenProductModal }} />
         </Pagination>
       )}
 
