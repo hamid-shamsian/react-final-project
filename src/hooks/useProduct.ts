@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import productService, { Product } from "../services/productService";
+import productService, { RichProduct } from "../services/productService";
 
 const useProduct = (id: string) =>
-  useQuery<Product, AxiosError>({
+  useQuery<RichProduct, AxiosError>({
     queryKey: ["products", id],
     queryFn: () => {
       try {

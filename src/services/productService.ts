@@ -1,5 +1,7 @@
 import http from "./httpService";
 import config from "../../config.json";
+import { Category } from "./catService";
+import { SubCategory } from "./subCatService";
 
 export interface Product {
   name: string;
@@ -16,6 +18,25 @@ export interface Product {
   };
   categoryName?: string;
   subcategoryName?: string;
+  slugname: string;
+  createdAt: string;
+  updatedAt: string;
+  _id: string;
+}
+
+export interface RichProduct {
+  name: string;
+  category: Category;
+  subcategory: SubCategory;
+  price: number;
+  quantity: number;
+  description: string;
+  thumbnail: string;
+  images: string[];
+  rating: {
+    rate: number;
+    count: number;
+  };
   slugname: string;
   createdAt: string;
   updatedAt: string;
@@ -45,7 +66,7 @@ const addNew = (product: FormData) => http.post(productEndpoint, product);
 
 const getById = (id: string) =>
   http
-    .get<Product>(`${productEndpoint}/${id}`)
+    .get<RichProduct>(`${productEndpoint}/${id}`)
     .then(res => res.data)
     .catch(er => {
       throw er;
