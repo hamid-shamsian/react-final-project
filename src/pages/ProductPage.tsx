@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useTheme } from "@mui/material";
 import Box from "@mui/material/Box";
@@ -8,22 +8,28 @@ import LoadingSpinner from "../components/common/LoadingSpinner";
 import ErrorPresentation from "../components/common/ErrorPresentation";
 import SwiperSlider from "../components/widget/Swiper/Swiper";
 import ProductDetails from "../components/widget/ProductDetails";
+import QtySelector from "../components/widget/QtySelector";
 import useProduct from "../hooks/useProduct";
 import config from "../../config.json";
 
 const ProductPage = () => {
   const { id = "" } = useParams();
-  const theme = useTheme();
-  const descSection = useRef<HTMLElement>(null);
-
   const { data: product, isLoading, error } = useProduct(id);
 
+  const theme = useTheme();
+  const descSection = useRef<HTMLElement>(null);
+  const [qty, setQty] = useState(1);
+
+  useEffect(() => {
+    if (descSection.current) descSection.current.innerHTML = product?.description ?? "";
+  }, [product]);
+
   const images = product?.images.map(image => `${config.BACKEND_BASE_URL}/images/products/images/${image}`);
-  if (descSection.current) descSection.current.innerHTML = product?.description ?? "";
 
   return (
     <Box minHeight='100vh' pt={5} px={2}>
       {isLoading && <LoadingSpinner mt={30} />}
+
       {!isLoading && error && <ErrorPresentation itemTitle='محصول' error={error} />}
 
       {product && (
@@ -42,8 +48,9 @@ const ProductPage = () => {
               <ProductDetails product={product} />
 
               <Box display='flex' gap={3} mt={8}>
-                <Button variant='contained' fullWidth>
-                  اضافه به سبد خرید
+                {product.quantity > 0 && <QtySelector qty={qty} onChange={setQty} max={product.quantity} />}
+                <Button variant='contained' fullWidth disabled={!product.quantity}>
+                  {product.quantity ? "اضافه به سبد خرید" : "ناموجود"}
                   <AddShoppingCartIcon sx={{ mr: 2 }} />
                 </Button>
               </Box>
