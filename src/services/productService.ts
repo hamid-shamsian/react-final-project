@@ -43,6 +43,14 @@ const getAll = (page: number = 1, limit: number = 5, ofCatId?: string) => {
 
 const addNew = (product: FormData) => http.post(productEndpoint, product);
 
+const getById = (id: string) =>
+  http
+    .get<Product>(`${productEndpoint}/${id}`)
+    .then(res => res.data)
+    .catch(er => {
+      throw er;
+    });
+
 const deleteById = (id: string) => http.delete(`${productEndpoint}/${id}`).then(res => res.data);
 
 const editById = ({ id, product }: EditingData) => http.patch<Product>(`${productEndpoint}/${id}`, product).then(res => res.data);
@@ -50,6 +58,7 @@ const editById = ({ id, product }: EditingData) => http.patch<Product>(`${produc
 const productService = {
   getAll,
   addNew,
+  getById,
   deleteById,
   editById
 };

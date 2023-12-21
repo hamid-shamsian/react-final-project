@@ -21,14 +21,18 @@ const errorHandler = (error: AxiosError) => {
 
   if (!expectedError) {
     logService.log(error);
-    toast.error("خطای ناشناخته!");
+    toast.error("خطای سرور یا عدم اتصال به اینترنت!");
   }
 
-  try {
-    return customErrorHandling(error);
-  } catch (error) {
-    return Promise.reject(error);
+  if (error.response?.status === 401) {
+    try {
+      return customErrorHandling(error);
+    } catch (error) {
+      return Promise.reject(error);
+    }
   }
+
+  return Promise.reject(error);
 };
 
 axios.interceptors.response.use(null, errorHandler);
