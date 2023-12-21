@@ -1,17 +1,15 @@
 import Box from "@mui/material/Box";
-import ProductCard from "../components/widget/ProductCard";
-import useProducts from "../hooks/useProducts";
-import { Product } from "../services/productService";
+import CategoryProducts from "../components/widget/CategoryProducts";
+import LoadingSpinner from "../components/common/LoadingSpinner";
+import useCategories from "../hooks/useCategories";
 
 const HomePage = () => {
-  const { data } = useProducts({ page: 1, perPage: 10 });
-  const { products = [] } = data ?? {};
+  const { data: categories = [], isLoading } = useCategories();
 
   return (
-    <Box sx={{ padding: 5, display: "flex", gap: 3, flexWrap: "wrap" }}>
-      {products.map((p: Product) => (
-        <ProductCard key={p._id} product={p} />
-      ))}
+    <Box>
+      {isLoading && <LoadingSpinner />}
+      {categories.length > 0 && !isLoading && categories.map(category => <CategoryProducts key={category._id} category={category} limit={6} />)}
     </Box>
   );
 };

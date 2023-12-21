@@ -6,6 +6,7 @@ interface ProductQuery {
   page: number;
   perPage: number;
   richItems?: boolean;
+  ofCatId?: string;
 }
 
 interface ProductsData {
@@ -13,8 +14,8 @@ interface ProductsData {
   totalCount: number;
 }
 
-const fetchProducts = async ({ page, perPage, richItems }: ProductQuery): Promise<ProductsData> => {
-  let { products, total } = await productService.getAll(page, perPage);
+const fetchProducts = async ({ page, perPage, richItems, ofCatId }: ProductQuery): Promise<ProductsData> => {
+  let { products, total } = await productService.getAll(page, perPage, ofCatId);
 
   if (richItems) {
     const subCategories = await Promise.all(products.map((p: Product) => p.subcategory).map((subCatId: string) => subCatService.getById(subCatId)));

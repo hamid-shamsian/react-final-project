@@ -17,8 +17,8 @@ interface ProductCardProps {
 
 const ProductCard = ({ product }: ProductCardProps) => {
   return (
-    <Link to={`/products/${product._id}`} style={{ textDecoration: "none" }}>
-      <Card sx={{ display: "flex", minWidth: "300px", position: "relative" }}>
+    <Link to={`/products/${product._id}`} style={{ textDecoration: "none", display: "inline-flex" }}>
+      <Card sx={{ display: "inline-flex", minWidth: "330px", position: "relative" }}>
         <img width={150} height={150} src={`${config.BACKEND_BASE_URL}/images/products/thumbnails/${product.thumbnail}`} alt='Product Image' />
         <Box>
           <CardContent>
