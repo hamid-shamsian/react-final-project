@@ -10,6 +10,7 @@ const FlexContainer = ({ children }: { children: ReactNode }) => {
       sx={{
         display: "flex",
         justifyContent: "center",
+        alignItems: "start",
         flexWrap: "wrap",
         gap: 2,
 
