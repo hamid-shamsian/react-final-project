@@ -32,7 +32,7 @@ const AdminStockPage = () => {
   const [page, setPage] = useState(getSearchedPage());
   const [perPage, setPerPage] = useState(getSearchedPerPage());
 
-  const { data, isLoading } = useProducts({ page, perPage });
+  const { data, isLoading } = useProducts.paginated({ page, perPage });
   const { products = [], totalCount = 0 } = data ?? {};
 
   const bulkEditProducts = useEditProduct(true);

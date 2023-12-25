@@ -36,7 +36,7 @@ const AdminProductsPage = () => {
   const [deleteModal, setDeleteModal] = useState({ open: false, id: "", name: "" });
   const [productModal, setProductModal] = useState<{ open: boolean; product: Product | null }>({ open: false, product: null });
 
-  const { data, isLoading } = useProducts({ page, perPage, richItems: true });
+  const { data, isLoading } = useProducts.paginated({ page, perPage, richItems: true });
   const { products = [], totalCount = 0 } = data ?? {};
 
   const addProduct = useAddProduct();

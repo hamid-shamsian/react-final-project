@@ -7,7 +7,7 @@ import LoadingSpinner from "../components/common/LoadingSpinner";
 import CategoriesNav from "../components/widget/CategoriesNav";
 import FlexContainer from "../components/mui-customized/FlexContainer";
 import ProductCard from "../components/widget/ProductCard";
-import useInfiniteProducts from "../hooks/useInfiniteProducts";
+import useProducts from "../hooks/useProducts";
 import useCategories from "../hooks/useCategories";
 import { Product } from "../services/productService";
 
@@ -17,7 +17,7 @@ const CategoriesPage = () => {
   const { data: categories = [], isLoading } = useCategories();
   const selectedCat = categories.find(c => c.slugname === cat);
 
-  const { data, isFetching, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteProducts({ perPage: 20, ofCatId: selectedCat?._id });
+  const { data, isFetching, isFetchingNextPage, fetchNextPage, hasNextPage } = useProducts.infinite({ perPage: 20, ofCatId: selectedCat?._id });
 
   return (
     <Box display='flex' alignItems='start'>
@@ -41,7 +41,7 @@ const CategoriesPage = () => {
         <FlexContainer>
           {data?.pages.map((page, i) => (
             <Fragment key={i}>
-              {page.map((product: Product) => (
+              {page.products.map((product: Product) => (
                 <ProductCard key={product._id} product={product} />
               ))}
             </Fragment>

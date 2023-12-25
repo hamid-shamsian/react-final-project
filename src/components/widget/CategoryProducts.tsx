@@ -14,7 +14,7 @@ interface ProductsOfCatProps {
 }
 
 const CategoryProducts = ({ category, limit }: ProductsOfCatProps) => {
-  const { data, isLoading } = useProducts({ page: 1, perPage: limit, ofCatId: category._id });
+  const { data, isLoading } = useProducts.paginated({ page: 1, perPage: limit, ofCatId: category._id });
   const { products = [] } = data ?? {};
 
   return (
