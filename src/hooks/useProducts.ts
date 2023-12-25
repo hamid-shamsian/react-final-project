@@ -5,8 +5,9 @@ import subCatService from "../services/subCatService";
 interface ProductQuery {
   page?: number;
   perPage: number;
-  richItems?: boolean;
   ofCatId?: string;
+  ofSubCatId?: string;
+  richItems?: boolean;
 }
 
 interface ProductsData {
@@ -14,8 +15,8 @@ interface ProductsData {
   totalCount: number;
 }
 
-const fetchProducts = async ({ page, perPage, richItems, ofCatId }: ProductQuery): Promise<ProductsData> => {
-  let { products, total } = await productService.getAll(page, perPage, ofCatId);
+const fetchProducts = async ({ page, perPage, ofCatId, ofSubCatId, richItems }: ProductQuery): Promise<ProductsData> => {
+  let { products, total } = await productService.getAll(page, perPage, ofCatId, ofSubCatId);
 
   if (richItems) {
     const subCategories = await Promise.all(products.map((p: Product) => p.subcategory).map((subCatId: string) => subCatService.getById(subCatId)));
@@ -39,8 +40,9 @@ const paginated = (query: ProductQuery) =>
 const infinite = (query: ProductQuery) =>
   useInfiniteQuery<ProductsData, Error, InfiniteData<ProductsData>, [string, ProductQuery], number>({
     queryKey: ["products", query],
-    initialPageParam: 1,
     queryFn: ({ pageParam }): Promise<ProductsData> => fetchProducts({ ...query, page: pageParam }),
+    placeholderData: prevData => prevData,
+    initialPageParam: 1,
     getNextPageParam: (lastPage, allPages) => (allPages.length < lastPage.totalCount / query.perPage ? allPages.length + 1 : null)
   });
 

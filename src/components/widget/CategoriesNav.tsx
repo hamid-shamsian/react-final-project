@@ -32,7 +32,7 @@ const CategoriesNav = ({ categories }: CategoriesNavProps) => {
   const handleClick = (i: number) => setOpens(prevOpens => prevOpens.map((o, index) => (index === i ? !o : o)));
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", width: 230 }}>
+    <Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}>
       <Box
         sx={{
           bgcolor: "background.paper",

@@ -57,8 +57,8 @@ export interface EditingData {
 
 const productEndpoint = config.API_BASE_URL + "/products";
 
-const getAll = (page: number = 1, limit: number = 5, ofCatId?: string) => {
-  const filterQuery = ofCatId ? `&category=${ofCatId}` : "";
+const getAll = (page: number = 1, limit: number = 5, ofCatId?: string, ofSubCatId?: string) => {
+  const filterQuery = ofSubCatId ? `&subcategory=${ofSubCatId}` : ofCatId ? `&category=${ofCatId}` : "";
   return http.get<GetAllResponse>(`${productEndpoint}?limit=${limit}&page=${page}${filterQuery}`).then(res => res.data);
 };
 
