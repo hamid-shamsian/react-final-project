@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useForm } from "react-hook-form";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -62,7 +62,17 @@ const inputs = {
 };
 
 const ProductModal = ({ data, categories = [], onSubmit, onCancel }: ProductModalProps) => {
-  const { name = "", category = "", subcategory = "", price = "" as any, quantity = "" as any, description = "" } = data.product ?? {};
+  const {
+    name = "",
+    category = "",
+    subcategory = "",
+    price = "" as any,
+    quantity = "" as any,
+    description = "",
+    thumbnail = "",
+    images = []
+  } = data.product ?? {};
+
   const defaultValues = { name, category, subcategory, price, quantity };
 
   // prettier-ignore
@@ -87,15 +97,19 @@ const ProductModal = ({ data, categories = [], onSubmit, onCancel }: ProductModa
 
     const thumbnail = thumbImageRef.current?.getImages()[0];
     if (thumbnail) data.thumbnail = thumbnail;
+    else return thumbImageRef.current.warning();
 
     const formData = new FormData();
     for (const key in data) formData.append(key, data[key]);
 
     const images = mainImagesRef.current?.getImages();
     if (images.length) images.forEach((img: File) => formData.append("images", img));
+    else return mainImagesRef.current.warning();
 
     onSubmit(formData);
   };
+
+  const getThumbnail = useMemo(() => (thumbnail ? [thumbnail] : []), [thumbnail]);
 
   return (
     <Modal open={data.open}>
@@ -117,8 +131,8 @@ const ProductModal = ({ data, categories = [], onSubmit, onCancel }: ProductModa
             <RichRHFTextField {...inputs.quantity} error={errors} control={control} />
           </Box>
 
-          <ImageInput title='تصویر انگشتی' ref={thumbImageRef} />
-          <ImageInput title='تصاویر محصول' multiple ref={mainImagesRef} />
+          <ImageInput title='تصویر انگشتی' images={getThumbnail} path='thumbnails' max={1} ref={thumbImageRef} />
+          <ImageInput title='تصاویر محصول' images={images} path='images' max={10} ref={mainImagesRef} />
 
           <Box mt={3}>
             <TinyMCE ref={editorRef} initialValue={description} />
