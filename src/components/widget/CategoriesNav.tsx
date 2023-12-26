@@ -71,6 +71,7 @@ const CategoriesNav = ({ categories }: CategoriesNavProps) => {
           <IconButton
             onClick={e => {
               e.preventDefault();
+              e.stopPropagation();
               index != null && handleClick(index);
             }}
           >

@@ -2,7 +2,12 @@ import { ReactNode } from "react";
 import Box from "@mui/material/Box";
 import { useTheme } from "@mui/material";
 
-const FlexContainer = ({ children }: { children: ReactNode }) => {
+interface FlexContainerProps {
+  children: ReactNode;
+  align?: "responsive" | "center";
+}
+
+const FlexContainer = ({ children, align = "responsive" }: FlexContainerProps) => {
   const theme = useTheme();
 
   return (
@@ -14,9 +19,11 @@ const FlexContainer = ({ children }: { children: ReactNode }) => {
         flexWrap: "wrap",
         gap: 2,
 
-        [theme.breakpoints.up("md")]: {
-          justifyContent: "end"
-        }
+        ...(align === "responsive" && {
+          [theme.breakpoints.up("md")]: {
+            justifyContent: "end"
+          }
+        })
         // padding: 3,
         // borderRadius: 2,
         // backgroundColor: theme.palette.background.paper
