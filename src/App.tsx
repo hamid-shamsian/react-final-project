@@ -15,7 +15,7 @@ const App = () => {
 
   // TODO: Satisfy TS in order to change line below to: themes[theme]
   return (
-    <ThemeProvider theme={themes[theme === "light" ? "light" : "dark"]}>
+    <ThemeProvider theme={themes[theme === "dark" ? "dark" : "light"]}>
       <CssBaseline />
       <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />
