@@ -1,28 +1,35 @@
-import { List, ListItem, ListItemText, Box, Typography, Switch } from "@mui/material";
 import { useDispatch } from "react-redux";
+import { List, Box, Typography, Switch } from "@mui/material";
+import HomeIcon from "@mui/icons-material/Home";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import LoginIcon from "@mui/icons-material/Login";
+import LogoutIcon from "@mui/icons-material/Logout";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import CustomNavLink from "./CustomNavLink";
+import { themeActions } from "../../redux/features/themeSlice";
 import useUser from "../../hooks/useUser";
 import useTheme from "../../hooks/useTheme";
-import { themeActions } from "../../redux/features/themeSlice";
 
 const staticLinks = [
-  { name: "خانه", href: "/" },
-  { name: "سبدخرید", href: "/cart" }
+  { title: "خانه", icon: <HomeIcon />, href: "/" },
+  { title: "سبدخرید", icon: <ShoppingCartIcon />, href: "/cart" }
 ];
 
 const loggedOutLinks = [
-  { name: "ورود", href: "/login" },
-  { name: "ثبت‌نام", href: "/signup" }
+  { title: "ورود", icon: <LoginIcon />, href: "/login" },
+  { title: "عضویت", icon: <PersonAddAltIcon />, href: "/signup" }
 ];
 
 const userLinks = [
-  { name: "پروفایل", href: "/profile" },
-  { name: "خروج", href: "/logout" }
+  { title: "پروفایل", icon: <AccountCircleIcon />, href: "/profile" },
+  { title: "خروج", icon: <LogoutIcon />, href: "/logout" }
 ];
 
 const adminLinks = [
-  { name: "پنل‌مدیریت", href: "/admin" },
-  { name: "خروج", href: "/logout" }
+  { title: "مدیریت", icon: <DashboardIcon />, href: "/admin" },
+  { title: "خروج", icon: <LogoutIcon />, href: "/logout" }
 ];
 
 interface NavigationProps {
@@ -44,13 +51,25 @@ const Navigation = ({ onItemClick, layout = "column" }: NavigationProps) => {
         <Switch checked={theme === "dark"} onChange={() => dispatch(themeActions.toggle())} />
       </Box>
 
-      <List component='nav' sx={{ display: "flex", flexDirection: layout, paddingLeft: layout === "row" ? 0 : 20 }}>
+      <List
+        component='nav'
+        sx={{
+          display: "flex",
+          flexDirection: layout,
+          alignItems: layout === "row" ? "center" : "start",
+          gap: 5,
+          pl: layout === "row" ? 3 : 10,
+          pr: layout === "row" ? 0 : 5,
+          py: layout === "row" ? 0 : 5
+        }}
+      >
         {links.map((link, i) => (
-          <ListItem key={i} onClick={onItemClick}>
-            <CustomNavLink to={link.href} active='shadow'>
-              <ListItemText primary={link.name} />
-            </CustomNavLink>
-          </ListItem>
+          <CustomNavLink to={link.href} active='shadow' key={i} onClick={onItemClick}>
+            <Box display='flex' alignItems='center' gap={1}>
+              {link.icon}
+              {link.title}
+            </Box>
+          </CustomNavLink>
         ))}
       </List>
 
