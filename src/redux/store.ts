@@ -1,16 +1,26 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
-import { persistReducer, persistStore } from "redux-persist";
+import { persistReducer, persistStore, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import userReducer from "./features/userSlice";
 import themeReducer from "./features/themeSlice";
+import cartReducer from "./features/cartSlice";
 
 const persistConfig = { key: "root", storage, blacklist: ["user"] };
 
-const rootReducer = combineReducers({ user: userReducer, theme: themeReducer });
+const rootReducer = combineReducers({ user: userReducer, theme: themeReducer, cart: cartReducer });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-const store = configureStore({ reducer: persistedReducer });
+const store = configureStore({
+  reducer: persistedReducer,
+  // this middleware property is only for addressing an internal redux-persist related issue about state and actions serializability...
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER]
+      }
+    })
+});
 
 export const persistor = persistStore(store);
 

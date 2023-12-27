@@ -1,16 +1,18 @@
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { useTheme } from "@mui/material";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import LoadingSpinner from "../components/common/LoadingSpinner";
 import ErrorPresentation from "../components/common/ErrorPresentation";
 import SwiperSlider from "../components/widget/Swiper/Swiper";
 import ProductDetails from "../components/widget/ProductDetails";
 import QtySelector from "../components/widget/QtySelector";
 import useProduct from "../hooks/useProduct";
+import useCart from "../hooks/useCart";
+import { CartItem, cartActions } from "../redux/features/cartSlice";
 import config from "../../config.json";
+import AddToCartBtn from "../components/common/AddToCartBtn";
 
 const ProductPage = () => {
   const { id = "" } = useParams();
@@ -18,7 +20,12 @@ const ProductPage = () => {
 
   const theme = useTheme();
   const descSection = useRef<HTMLElement>(null);
-  const [qty, setQty] = useState(1);
+  const dispatch = useDispatch();
+
+  const cart = useCart();
+  const addedToCart: CartItem | undefined = cart.find((p: CartItem) => p.pId === id);
+
+  const [qty, setQty] = useState(addedToCart?.qty ?? 1);
 
   useEffect(() => {
     if (descSection.current) descSection.current.innerHTML = product?.description ?? "";
@@ -47,12 +54,17 @@ const ProductPage = () => {
             >
               <ProductDetails product={product} />
 
-              <Box display='flex' gap={3} mt={8}>
+              <Box display='flex' flexWrap='wrap' justifyContent='center' gap={3} mt={8}>
                 {product.quantity > 0 && <QtySelector qty={qty} onChange={setQty} max={product.quantity} />}
-                <Button variant='contained' fullWidth disabled={!product.quantity}>
-                  {product.quantity ? "اضافه به سبد خرید" : "ناموجود"}
-                  <AddShoppingCartIcon sx={{ mr: 2 }} />
-                </Button>
+
+                <Box sx={{ display: "flex", width: 250 }}>
+                  <AddToCartBtn
+                    selectedQty={qty}
+                    addedQty={addedToCart?.qty}
+                    enabled={!!product.quantity}
+                    onClick={() => dispatch(cartActions.processItem({ pId: product._id, qty }))}
+                  />
+                </Box>
               </Box>
             </Box>
           </Box>
