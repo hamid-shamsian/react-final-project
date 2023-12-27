@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { List, Box, Typography, Switch } from "@mui/material";
+import { List, Box, Typography, Switch, Badge } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import LoginIcon from "@mui/icons-material/Login";
@@ -11,10 +11,21 @@ import CustomNavLink from "./CustomNavLink";
 import { themeActions } from "../../redux/features/themeSlice";
 import useUser from "../../hooks/useUser";
 import useTheme from "../../hooks/useTheme";
+import { CartItem } from "../../redux/features/cartSlice";
+import { farsify } from "../../utils/utilityFuncs";
+import useCart from "../../hooks/useCart";
 
 const staticLinks = [
   { title: "خانه", icon: <HomeIcon />, href: "/" },
-  { title: "سبدخرید", icon: <ShoppingCartIcon />, href: "/cart" }
+  {
+    title: "سبدخرید",
+    content: (cart: CartItem[]) => (
+      <Badge color='info' badgeContent={farsify(cart.length)}>
+        <ShoppingCartIcon />
+      </Badge>
+    ),
+    href: "/cart"
+  }
 ];
 
 const loggedOutLinks = [
@@ -41,6 +52,7 @@ const Navigation = ({ onItemClick, layout = "column" }: NavigationProps) => {
   const dispatch = useDispatch();
   const user = useUser();
   const theme = useTheme();
+  const cart = useCart();
 
   const links = staticLinks.concat(!user ? loggedOutLinks : user.role === "ADMIN" ? adminLinks : userLinks);
 
@@ -66,7 +78,7 @@ const Navigation = ({ onItemClick, layout = "column" }: NavigationProps) => {
         {links.map((link, i) => (
           <CustomNavLink to={link.href} active='shadow' key={i} onClick={onItemClick}>
             <Box display='flex' alignItems='center' gap={1}>
-              {link.icon}
+              {link.icon ?? link.content(cart)}
               {link.title}
             </Box>
           </CustomNavLink>
