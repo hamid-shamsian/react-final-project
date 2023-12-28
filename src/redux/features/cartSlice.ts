@@ -15,6 +15,10 @@ const cartSlice = createSlice({
       if (!addedToCart) state.push(action.payload);
       else if (addedToCart.qty === action.payload.qty) state.splice(state.indexOf(addedToCart), 1);
       else addedToCart.qty = action.payload.qty;
+    },
+    removeItemById: (state: CartItem[], action: { type: string; payload: string }) => {
+      const index = state.findIndex(item => item._id === action.payload);
+      state.splice(index, 1);
     }
   }
 });

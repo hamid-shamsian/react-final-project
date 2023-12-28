@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { useDispatch } from "react-redux";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
@@ -9,7 +10,7 @@ import LoadingSpinner from "../components/common/LoadingSpinner";
 import CustomLink from "../components/common/CustomLink";
 import useCart from "../hooks/useCart";
 import useProductsByIds from "../hooks/useProductsByIds";
-import { CartItem } from "./../redux/features/cartSlice";
+import { CartItem, cartActions } from "./../redux/features/cartSlice";
 import { RichProduct } from "../services/productService";
 import { farsify } from "../utils/utilityFuncs";
 import tableColumns from "../tablesColumns/cart";
@@ -22,9 +23,12 @@ export type RichCartItem = CartItem &
 
 const CartPage = () => {
   const cart = useCart();
+  const dispatch = useDispatch();
 
   const { products, isLoading } = useProductsByIds(cart.map(item => item._id));
   const richCartItems: RichCartItem[] = cart.map((item, i) => ({ ...item, ...(products[i].data ?? { loading: <LoadingSpinner /> }) }));
+
+  const handleDelete = (item: RichCartItem) => dispatch(cartActions.removeItemById(item._id));
 
   const totalPrice = richCartItems.reduce((total, item) => total + item.qty * (item.price ?? 0), 0);
 
@@ -36,7 +40,7 @@ const CartPage = () => {
 
       {cart.length ? (
         <>
-          <StripedTable columns={tableColumns} rowsData={richCartItems} />
+          <StripedTable columns={tableColumns} rowsData={richCartItems} actions={{ delete: handleDelete }} />
 
           <Box sx={{ display: "flex", justifyContent: "end", alignItems: "center", gap: 4, my: 10 }}>
             <Typography sx={{ display: "flex", gap: 5 }}>

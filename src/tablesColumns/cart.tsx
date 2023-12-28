@@ -1,3 +1,4 @@
+import Button from "@mui/material/Button";
 import { RichCartItem } from "../pages/CartPage";
 import { farsify } from "../utils/utilityFuncs";
 import config from "../../config.json";
@@ -24,6 +25,14 @@ const tableColumns = [
     content: (item: RichCartItem) => {
       if (item.price) return <span>{farsify(item.price)} تومان</span>;
     }
+  },
+  {
+    key: "delete",
+    content: (item: RichCartItem, _delete: (item: RichCartItem) => void) => (
+      <Button variant='contained' size='small' color='error' onClick={() => _delete(item)}>
+        حذف
+      </Button>
+    )
   }
 ];
 
