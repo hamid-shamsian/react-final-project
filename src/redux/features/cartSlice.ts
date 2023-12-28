@@ -19,7 +19,8 @@ const cartSlice = createSlice({
     removeItemById: (state: CartItem[], action: { type: string; payload: string }) => {
       const index = state.findIndex(item => item._id === action.payload);
       state.splice(index, 1);
-    }
+    },
+    clearCart: _ => []
   }
 });
 
