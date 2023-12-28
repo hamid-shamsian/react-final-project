@@ -28,6 +28,7 @@ const CartPage = () => {
   const { products, isLoading } = useProductsByIds(cart.map(item => item._id));
   const richCartItems: RichCartItem[] = cart.map((item, i) => ({ ...item, ...(products[i].data ?? { loading: <LoadingSpinner /> }) }));
 
+  const handleChangeQty = (item: RichCartItem) => dispatch(cartActions.processItem({ _id: item._id, qty: item.qty }));
   const handleDelete = (item: RichCartItem) => dispatch(cartActions.removeItemById(item._id));
 
   const totalPrice = richCartItems.reduce((total, item) => total + item.qty * (item.price ?? 0), 0);
@@ -40,7 +41,7 @@ const CartPage = () => {
 
       {cart.length ? (
         <>
-          <StripedTable columns={tableColumns} rowsData={richCartItems} actions={{ delete: handleDelete }} />
+          <StripedTable columns={tableColumns} rowsData={richCartItems} actions={{ delete: handleDelete, qty: handleChangeQty }} />
 
           <Box sx={{ display: "flex", justifyContent: "end", alignItems: "center", gap: 4, my: 10 }}>
             <Typography sx={{ display: "flex", gap: 5 }}>

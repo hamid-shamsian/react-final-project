@@ -1,4 +1,5 @@
 import Button from "@mui/material/Button";
+import QtySelector from "../components/widget/QtySelector";
 import { RichCartItem } from "../pages/CartPage";
 import { farsify } from "../utils/utilityFuncs";
 import config from "../../config.json";
@@ -24,6 +25,20 @@ const tableColumns = [
     key: "price",
     content: (item: RichCartItem) => {
       if (item.price) return <span>{farsify(item.price)} تومان</span>;
+    }
+  },
+  {
+    label: "تعداد",
+    key: "qty",
+    content: (item: RichCartItem, _changeQty: (item: RichCartItem) => void) => {
+      if (item.quantity) return <QtySelector qty={item.qty} onChange={qty => _changeQty({ ...item, qty })} max={item.quantity} />;
+    }
+  },
+  {
+    label: "مجموع قیمت",
+    key: "totalPrice",
+    content: (item: RichCartItem) => {
+      if (item.price) return <span>{farsify(item.price * item.qty)} تومان</span>;
     }
   },
   {

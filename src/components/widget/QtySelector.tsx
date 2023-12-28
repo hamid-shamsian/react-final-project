@@ -21,7 +21,7 @@ const QtySelector = ({ qty, onChange, max }: QtySelectorProps) => {
   };
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ display: "flex", justifyContent: "center" }}>
       <IconButton onClick={handleDecrement} disabled={qty === 1}>
         <RemoveIcon />
       </IconButton>

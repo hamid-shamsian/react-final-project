@@ -20,7 +20,7 @@ const staticLinks = [
   {
     title: "سبدخرید",
     content: (cart: CartItem[]) => (
-      <Badge color='info' badgeContent={farsify(cart.length)}>
+      <Badge color='info' badgeContent={cart.length && farsify(cart.length)}>
         <ShoppingCartIcon />
       </Badge>
     ),
