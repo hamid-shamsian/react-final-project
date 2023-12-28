@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 export interface CartItem {
-  pId: string;
+  _id: string;
   qty: number;
 }
 
@@ -10,7 +10,7 @@ const cartSlice = createSlice({
   initialState: [],
   reducers: {
     processItem: (state: CartItem[], action: { type: string; payload: CartItem }) => {
-      const addedToCart: CartItem | undefined = state.find((p: CartItem) => p.pId === action.payload.pId);
+      const addedToCart: CartItem | undefined = state.find((p: CartItem) => p._id === action.payload._id);
 
       if (!addedToCart) state.push(action.payload);
       else if (addedToCart.qty === action.payload.qty) state.splice(state.indexOf(addedToCart), 1);

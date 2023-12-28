@@ -23,7 +23,7 @@ const ProductPage = () => {
   const dispatch = useDispatch();
 
   const cart = useCart();
-  const addedToCart: CartItem | undefined = cart.find((p: CartItem) => p.pId === id);
+  const addedToCart: CartItem | undefined = cart.find((p: CartItem) => p._id === id);
 
   const [qty, setQty] = useState(addedToCart?.qty ?? 1);
 
@@ -62,7 +62,7 @@ const ProductPage = () => {
                     selectedQty={qty}
                     addedQty={addedToCart?.qty}
                     enabled={!!product.quantity}
-                    onClick={() => dispatch(cartActions.processItem({ pId: product._id, qty }))}
+                    onClick={() => dispatch(cartActions.processItem({ _id: product._id, qty }))}
                   />
                 </Box>
               </Box>
