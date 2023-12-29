@@ -3,13 +3,26 @@ import config from "../../config.json";
 
 const ordersEndpoint = config.API_BASE_URL + "/orders";
 
-const getOrders = (page: number = 1, limit: number = 5, filter: string = "all") => {
+interface OrderItem {
+  product: string;
+  count: number;
+}
+
+interface NewOrder {
+  user: string;
+  products: OrderItem[];
+}
+
+const getAll = (page: number = 1, limit: number = 5, filter: string = "all") => {
   const filterQuery = filter !== "all" ? `&deliveryStatus=${filter === "delivered"}` : "";
   return http.get(`${ordersEndpoint}?limit=${limit}&page=${page}${filterQuery}`);
 };
 
+const addNew = (order: NewOrder) => http.post(ordersEndpoint, order);
+
 const orderService = {
-  getOrders
+  getAll,
+  addNew
 };
 
 export default orderService;

@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import Avatar from "@mui/material/Avatar";
@@ -25,6 +25,7 @@ interface FormValues {
 const LoginPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
   // prettier-ignore
   const { control, handleSubmit: validateForm, formState: {errors} } = useForm<FormValues>({ defaultValues: { username: '', password: '' }});
@@ -38,7 +39,7 @@ const LoginPage = () => {
       dispatch(userActions.setUser(user));
 
       if (user.role === "ADMIN") navigate("/admin");
-      else navigate("/");
+      else navigate(location.state?.from ?? "/");
     } catch (error) {}
   };
 

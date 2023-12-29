@@ -1,13 +1,16 @@
+import { useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import RHFTextField from "../components/common/RHFTextField";
+import useUser from "../hooks/useUser";
 // import PersianDatePicker from "../components/common/PersianDatePicker";
 
 export interface FormValues {
-  firstName: string;
-  lastName: string;
+  firstname: string;
+  lastname: string;
   address: string;
   phoneNumber: string;
   [key: string]: any;
@@ -16,13 +19,13 @@ export interface FormValues {
 const message = "مقدار وارد شده صحیح نیست";
 
 const inputs = {
-  firstName: {
-    name: "firstName",
+  firstname: {
+    name: "firstname",
     label: "نام",
     rules: { required: "نام ضروری است", pattern: { value: /^[\u0600-\u06FF\s]+$/u, message } }
   },
-  lastName: {
-    name: "lastName",
+  lastname: {
+    name: "lastname",
     label: "نام خانوادگی",
     rules: { required: "نام خانوادگی ضروری است", pattern: { value: /^[\u0600-\u06FF\s]+$/u, message } }
   },
@@ -41,14 +44,22 @@ const inputs = {
 };
 
 const CheckoutPage = () => {
-  const { firstName = "", lastName = "", address = "", phoneNumber = "" } = {}; // maybe get populated from user data later...
-  const defaultValues = { firstName, lastName, address, phoneNumber };
+  const user = useUser();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const { firstname = "", lastname = "", address = "", phoneNumber = "" } = user ?? {};
+  const defaultValues = { firstname, lastname, address, phoneNumber };
+
+  useEffect(() => {
+    if (!user) navigate("/login", { state: { from: location.pathname } });
+  }, [user]);
 
   // prettier-ignore
   const { control, handleSubmit: validateForm, formState: { errors } } = useForm<FormValues>({ defaultValues });
 
   const handleSubmit = (_: FormValues) => {
-    location.assign("http://127.0.0.1:5500/");
+    window.location.assign("http://127.0.0.1:5500/");
   };
 
   return (
@@ -60,8 +71,8 @@ const CheckoutPage = () => {
       <Box component='form' display='flex' flexDirection='column' onSubmit={validateForm(handleSubmit)}>
         <Box overflow='auto'>
           <Box display='flex' gap={3}>
-            <RHFTextField {...inputs.firstName} error={errors} control={control} />
-            <RHFTextField {...inputs.lastName} error={errors} control={control} />
+            <RHFTextField {...inputs.firstname} error={errors} control={control} />
+            <RHFTextField {...inputs.lastname} error={errors} control={control} />
           </Box>
 
           <RHFTextField {...inputs.address} error={errors} control={control} />

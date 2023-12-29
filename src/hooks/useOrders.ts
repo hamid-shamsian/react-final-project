@@ -36,7 +36,7 @@ interface OrdersData {
 }
 
 const fetchOrders = async ({ page, perPage, filter, richItems }: OrderQuery): Promise<OrdersData> => {
-  const { data } = await orderService.getOrders(page, perPage, filter);
+  const { data } = await orderService.getAll(page, perPage, filter);
   let { orders } = data.data;
 
   if (richItems) {

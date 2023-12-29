@@ -6,6 +6,7 @@ import CategoriesPage from "../pages/CategoriesPage";
 import ProductPage from "../pages/ProductPage";
 import CartPage from "../pages/CartPage";
 import CheckoutPage from "../pages/CheckoutPage";
+import PaymentPage from "../pages/PaymentPage";
 import ProfilePage from "../pages/ProfilePage";
 import PolicyPage from "../pages/PolicyPage";
 import ErrorPage from "../pages/ErrorPage";
@@ -35,6 +36,7 @@ const router = createBrowserRouter([
       { path: "products/:id", element: <ProductPage /> },
       { path: "cart", element: <CartPage /> },
       { path: "checkout", element: <CheckoutPage /> },
+      { path: "payment", element: <PaymentPage /> },
       { path: "profile", element: <ProfilePage />, loader: protectRoute.fromNoneLoggedInUsers },
       { path: "policy", element: <PolicyPage /> },
       { path: "logout", element: <LogoutPage /> }
