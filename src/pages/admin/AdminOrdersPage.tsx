@@ -7,6 +7,8 @@ import Pagination from "../../components/common/Pagination";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
 import StripedTable from "../../components/widget/StripedTable";
 import useOrders, { RichOrder } from "../../hooks/useOrders";
+import OrderModal from "../../components/widget/OrderModal";
+import useEditOrder from "../../hooks/useEditOrder";
 
 const radioBtns = [
   { value: "not-delivered", label: "سفارش‌های در انتظار ارسال" },
@@ -28,17 +30,11 @@ const tableColumns = [
     path: "createdAt"
   },
   {
-    label: "عملیات",
-    key: "actions",
-    content: (item: RichOrder) => (
-      <div id={item._id}>
-        <Button variant='outlined' size='small'>
-          مشاهده جزییات
-        </Button>
-        <Button variant='contained' size='small' color='error' sx={{ mr: 2 }}>
-          حذف
-        </Button>
-      </div>
+    key: "open",
+    content: (order: RichOrder, _open: (order: RichOrder) => void) => (
+      <Button variant='outlined' size='small' onClick={() => _open(order)}>
+        مشاهده جزییات
+      </Button>
     )
   }
 ];
@@ -47,6 +43,7 @@ const AdminOrdersPage = () => {
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(5);
   const [filter, setFilter] = useState("not-delivered");
+  const [orderModal, setOrderModal] = useState<{ open: boolean; order: RichOrder | null }>({ open: false, order: null });
 
   const { data, isLoading } = useOrders({ page, perPage, filter, richItems: true });
   const { orders = null, totalCount = 0 } = data ?? {};
@@ -63,8 +60,19 @@ const AdminOrdersPage = () => {
 
   const mappedRowsData = orders?.map(order => ({
     ...order,
-    createdAt: new Intl.DateTimeFormat("fa-IR").format(new Date(order.createdAt))
+    createdAt: new Intl.DateTimeFormat("fa-IR").format(new Date(order.createdAt)),
+    deliveryDate: new Intl.DateTimeFormat("fa-IR").format(new Date(order.deliveryDate))
   }));
+
+  const handleOpenOrderModal = (order: RichOrder) => setOrderModal({ open: true, order });
+  const handleCloseOrderModal = () => setOrderModal(prev => ({ ...prev, open: false }));
+
+  const editOrder = useEditOrder();
+
+  const handleSetDelivered = (order: RichOrder) => {
+    editOrder.mutate({ id: order._id, order: { deliveryStatus: true } });
+    setOrderModal({ open: false, order });
+  };
 
   return (
     <>
@@ -89,9 +97,11 @@ const AdminOrdersPage = () => {
           onPageChange={handlePageChange}
           onPerPageChange={handlePerPageChange}
         >
-          <StripedTable columns={tableColumns} rowsData={mappedRowsData} />
+          <StripedTable columns={tableColumns} rowsData={mappedRowsData} actions={{ open: handleOpenOrderModal }} />
         </Pagination>
       )}
+
+      <OrderModal open={orderModal.open} order={orderModal.order} onSetDelivered={handleSetDelivered} onCancel={handleCloseOrderModal} />
     </>
   );
 };

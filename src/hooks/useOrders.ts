@@ -21,6 +21,8 @@ interface Order {
 
 export interface RichOrder extends Order {
   userFullName: string;
+  address: string;
+  phoneNumber: string;
 }
 
 interface OrderQuery {
@@ -43,7 +45,12 @@ const fetchOrders = async ({ page, perPage, filter, richItems }: OrderQuery): Pr
     const users = await Promise.all(orders.map((o: Order) => o.user).map((userId: string) => userService.getUserById(userId)));
 
     const userFullNames = users.map(u => u.data.data.user.firstname + " " + u.data.data.user.lastname);
-    orders = orders.map((o: Order, i: number) => ({ ...o, userFullName: userFullNames[i] }));
+    orders = orders.map((o: Order, i: number) => ({
+      ...o,
+      userFullName: userFullNames[i],
+      address: users[i].data.data.user.address,
+      phoneNumber: users[i].data.data.user.phoneNumber
+    }));
   }
 
   return { orders, totalCount: data.total };

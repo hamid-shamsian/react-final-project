@@ -20,9 +20,12 @@ const getAll = (page: number = 1, limit: number = 5, filter: string = "all") => 
 
 const addNew = (order: NewOrder) => http.post(ordersEndpoint, order);
 
+const editById = ({ id, order }: any) => http.patch(`${ordersEndpoint}/${id}`, order).then(res => res.data);
+
 const orderService = {
   getAll,
-  addNew
+  addNew,
+  editById
 };
 
 export default orderService;
