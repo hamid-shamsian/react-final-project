@@ -22,6 +22,7 @@ export interface Order {
 interface NewOrder {
   user: string;
   products: OrderProduct[];
+  deliveryDate: Date;
 }
 
 const getAll = (page: number = 1, limit: number = 5, filter: string = "all") => {

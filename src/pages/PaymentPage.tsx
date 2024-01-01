@@ -22,9 +22,11 @@ const PaymentPage = () => {
 
   useEffect(() => {
     if (paymentStatus === "successful" && user && cart.length) {
-      const newOrder = { user: user._id, products: cart.map(item => ({ product: item._id, count: item.qty })) };
+      const deliveryDate = new Date(JSON.parse(localStorage.getItem("deliveryDate") ?? "") ?? Date.now()); // set to today if it did not exist in localstorage...
+      const newOrder = { user: user._id, products: cart.map(item => ({ product: item._id, count: item.qty })), deliveryDate };
       addOrder.mutate(newOrder);
       dispatch(cartActions.clearCart());
+      localStorage.setItem("deliveryDate", "null");
     }
   }, [user]);
 

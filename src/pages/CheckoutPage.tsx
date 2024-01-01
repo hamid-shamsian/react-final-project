@@ -1,13 +1,13 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import RHFTextField from "../components/common/RHFTextField";
+import PersianDatePicker from "../components/common/PersianDatePicker";
 import useUser from "../hooks/useUser";
 // import userService from "../services/userService";
-// import PersianDatePicker from "../components/common/PersianDatePicker";
 
 export interface FormValues {
   firstname: string;
@@ -49,12 +49,18 @@ const CheckoutPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const [deliveryDate, setDeliveryDate] = useState<Date | null>(null);
+
   const { firstname = "", lastname = "", address = "", phoneNumber = "" } = user ?? {};
   const defaultValues = { firstname, lastname, address, phoneNumber };
 
   useEffect(() => {
     if (!user) navigate("/login", { state: { from: location.pathname } });
   }, [user]);
+
+  useEffect(() => {
+    localStorage.setItem("deliveryDate", JSON.stringify(deliveryDate));
+  }, [deliveryDate]);
 
   // prettier-ignore
   const { control, handleSubmit: validateForm, formState: { errors } } = useForm<FormValues>({ defaultValues });
@@ -80,7 +86,7 @@ const CheckoutPage = () => {
           <RHFTextField {...inputs.address} error={errors} control={control} />
           <RHFTextField {...inputs.phoneNumber} error={errors} control={control} />
 
-          {/* <PersianDatePicker /> */}
+          <PersianDatePicker value={deliveryDate} onChange={(value: Date | null) => setDeliveryDate(value)} />
         </Box>
 
         <Button type='submit' variant='contained' color='success' fullWidth sx={{ mt: 5 }}>
