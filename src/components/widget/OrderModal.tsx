@@ -1,8 +1,11 @@
+import { Box, Button, IconButton, Typography } from "@mui/material";
+import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import Modal from "../common/Modal";
-import { RichOrder } from "../../hooks/useOrders";
-import { Box, Button, Typography } from "@mui/material";
+import LoadingSpinner from "../common/LoadingSpinner";
 import StripedTable from "./StripedTable";
 import useProductsByIds from "../../hooks/useProductsByIds";
+import { RichOrder } from "../../hooks/useOrders";
+import { farsify } from "../../utils/utilityFuncs";
 
 const tableColumns = [
   {
@@ -10,12 +13,14 @@ const tableColumns = [
     path: "name"
   },
   {
-    label: "تعداد",
-    path: "qty"
+    label: "قیمت واحد (تومان)",
+    key: "price",
+    content: (item: any) => farsify(item.price)
   },
   {
-    label: "قیمت",
-    path: "price"
+    label: "تعداد سفارش",
+    key: "qty",
+    content: (item: any) => farsify(item.qty)
   }
 ];
 
@@ -27,12 +32,12 @@ interface OrderModalProps {
 }
 
 const OrderModal = ({ open, order, onSetDelivered, onCancel }: OrderModalProps) => {
-  const { products } = useProductsByIds(order?.products?.map(p => p.product) ?? []);
-  const mappedProducts = products?.map((p, i) => ({ ...p.data, qty: order?.products[i].count }));
+  const { products, isLoading } = useProductsByIds(order?.products?.map(p => p.product) ?? []);
+  const mappedProducts = isLoading ? [] : products.map((p, i) => ({ ...p.data, qty: order?.products[i].count }));
 
   return (
     <Modal open={open} onClose={onCancel}>
-      <>
+      <Box p={1} position='relative'>
         <Box display='flex' width={700} mb={3}>
           <Box display='flex' flexDirection='column' gap={2} alignItems='end' ml={5}>
             <Typography whiteSpace='nowrap'>نام مشتری</Typography>
@@ -50,7 +55,7 @@ const OrderModal = ({ open, order, onSetDelivered, onCancel }: OrderModalProps) 
           </Box>
         </Box>
 
-        <StripedTable columns={tableColumns} rowsData={mappedProducts ?? []} />
+        {isLoading ? <LoadingSpinner /> : <StripedTable columns={tableColumns} rowsData={mappedProducts} />}
 
         {order && (
           <Box display='flex' justifyContent='center' mt={3}>
@@ -63,7 +68,11 @@ const OrderModal = ({ open, order, onSetDelivered, onCancel }: OrderModalProps) 
             )}
           </Box>
         )}
-      </>
+
+        <IconButton sx={{ position: "absolute", left: 0, top: 0 }} onClick={onCancel}>
+          <CloseOutlinedIcon />
+        </IconButton>
+      </Box>
     </Modal>
   );
 };

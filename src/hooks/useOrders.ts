@@ -1,23 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import orderService from "../services/orderService";
+import orderService, { Order } from "../services/orderService";
 import userService from "../services/userService";
-
-interface OrderProduct {
-  product: string;
-  count: number;
-  _id: string;
-}
-
-interface Order {
-  createdAt: string;
-  deliveryDate: string;
-  deliveryStatus: boolean;
-  products: OrderProduct[];
-  totalPrice: number;
-  updatedAt: string;
-  user: string;
-  _id: string;
-}
 
 export interface RichOrder extends Order {
   userFullName: string;

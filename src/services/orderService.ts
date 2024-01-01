@@ -3,14 +3,25 @@ import config from "../../config.json";
 
 const ordersEndpoint = config.API_BASE_URL + "/orders";
 
-interface OrderItem {
+interface OrderProduct {
   product: string;
   count: number;
 }
 
+export interface Order {
+  createdAt: string;
+  deliveryDate: string;
+  deliveryStatus: boolean;
+  products: OrderProduct[];
+  totalPrice: number;
+  updatedAt: string;
+  user: string;
+  _id: string;
+}
+
 interface NewOrder {
   user: string;
-  products: OrderItem[];
+  products: OrderProduct[];
 }
 
 const getAll = (page: number = 1, limit: number = 5, filter: string = "all") => {
@@ -20,7 +31,7 @@ const getAll = (page: number = 1, limit: number = 5, filter: string = "all") => 
 
 const addNew = (order: NewOrder) => http.post(ordersEndpoint, order);
 
-const editById = ({ id, order }: any) => http.patch(`${ordersEndpoint}/${id}`, order).then(res => res.data);
+const editById = ({ id, order }: { id: string; order: Partial<Order> }) => http.patch(`${ordersEndpoint}/${id}`, order).then(res => res.data);
 
 const orderService = {
   getAll,

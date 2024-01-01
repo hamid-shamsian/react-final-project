@@ -1,42 +1,20 @@
 import { useState } from "react";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import RadioBtnGroup from "../../components/common/RadioBtnGroup";
 import Pagination from "../../components/common/Pagination";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
 import StripedTable from "../../components/widget/StripedTable";
-import useOrders, { RichOrder } from "../../hooks/useOrders";
 import OrderModal from "../../components/widget/OrderModal";
+import useOrders, { RichOrder } from "../../hooks/useOrders";
 import useEditOrder from "../../hooks/useEditOrder";
+import tableColumns from "../../tablesColumns/adminOrders";
+import { farsify } from "../../utils/utilityFuncs";
 
 const radioBtns = [
   { value: "not-delivered", label: "سفارش‌های در انتظار ارسال" },
   { value: "delivered", label: "سفارش‌های تحویل شده" },
   { value: "all", label: "همه سفارش‌ها" }
-];
-
-const tableColumns = [
-  {
-    label: "نام مشتری",
-    path: "userFullName"
-  },
-  {
-    label: "مجموع سفارش",
-    path: "totalPrice"
-  },
-  {
-    label: "تاریخ ثبت سفارش",
-    path: "createdAt"
-  },
-  {
-    key: "open",
-    content: (order: RichOrder, _open: (order: RichOrder) => void) => (
-      <Button variant='outlined' size='small' onClick={() => _open(order)}>
-        مشاهده جزییات
-      </Button>
-    )
-  }
 ];
 
 const AdminOrdersPage = () => {
@@ -61,7 +39,8 @@ const AdminOrdersPage = () => {
   const mappedRowsData = orders?.map(order => ({
     ...order,
     createdAt: new Intl.DateTimeFormat("fa-IR").format(new Date(order.createdAt)),
-    deliveryDate: new Intl.DateTimeFormat("fa-IR").format(new Date(order.deliveryDate))
+    deliveryDate: new Intl.DateTimeFormat("fa-IR").format(new Date(order.deliveryDate)),
+    totalPrice: farsify(order.totalPrice)
   }));
 
   const handleOpenOrderModal = (order: RichOrder) => setOrderModal({ open: true, order });
