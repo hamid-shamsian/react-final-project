@@ -50,6 +50,7 @@ const CheckoutPage = () => {
   const location = useLocation();
 
   const [deliveryDate, setDeliveryDate] = useState<Date | null>(null);
+  const [dateInvalid, setDateInvalid] = useState(false);
 
   const { firstname = "", lastname = "", address = "", phoneNumber = "" } = user ?? {};
   const defaultValues = { firstname, lastname, address, phoneNumber };
@@ -66,6 +67,10 @@ const CheckoutPage = () => {
   const { control, handleSubmit: validateForm, formState: { errors } } = useForm<FormValues>({ defaultValues });
 
   const handleSubmit = (_: FormValues) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    if (!deliveryDate || String(deliveryDate) == "Invalid Date" || deliveryDate < today) return setDateInvalid(true);
+
     // userService.editById({ id: user._id, user: data }); // backend issue...
     window.location.assign("http://127.0.0.1:5500/");
   };
@@ -86,7 +91,7 @@ const CheckoutPage = () => {
           <RHFTextField {...inputs.address} error={errors} control={control} />
           <RHFTextField {...inputs.phoneNumber} error={errors} control={control} />
 
-          <PersianDatePicker value={deliveryDate} onChange={(value: Date | null) => setDeliveryDate(value)} />
+          <PersianDatePicker title='ارسال' value={deliveryDate} onChange={(value: Date | null) => setDeliveryDate(value)} invalid={dateInvalid} />
         </Box>
 
         <Button type='submit' variant='contained' color='success' fullWidth sx={{ mt: 5 }}>
