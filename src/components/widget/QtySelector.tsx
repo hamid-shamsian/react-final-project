@@ -1,8 +1,8 @@
+import Button from "@mui/material/Button";
+import ButtonGroup from "@mui/material/ButtonGroup";
 import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
-import Box from "@mui/material/Box";
 import { farsify } from "../../utils/utilityFuncs";
 
 interface QtySelectorProps {
@@ -21,31 +21,30 @@ const QtySelector = ({ qty, onChange, max }: QtySelectorProps) => {
   };
 
   return (
-    <Box sx={{ display: "flex", justifyContent: "center" }}>
-      <IconButton onClick={handleDecrement} disabled={qty === 1}>
-        <RemoveIcon />
-      </IconButton>
+    <ButtonGroup>
+      <Button variant='contained' onClick={handleIncrement} disabled={qty === max}>
+        <AddIcon />
+      </Button>
 
       <Typography
         sx={{
           width: "50px",
-          textAlign: "center",
           fontWeight: "bold",
-          border: "1px solid #999",
-          borderRadius: 1,
+          borderTop: "1px solid #999",
+          borderBottom: "1px solid #999",
           display: "flex",
           justifyContent: "center",
-          alignItems: "center",
-          mx: 1
+          alignItems: "center"
         }}
+        boxShadow={1}
       >
         {farsify(qty)}
       </Typography>
 
-      <IconButton onClick={handleIncrement} disabled={qty === max}>
-        <AddIcon />
-      </IconButton>
-    </Box>
+      <Button variant='contained' onClick={handleDecrement} disabled={qty === 1}>
+        <RemoveIcon />
+      </Button>
+    </ButtonGroup>
   );
 };
 

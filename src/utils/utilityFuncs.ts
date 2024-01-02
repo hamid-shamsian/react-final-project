@@ -20,9 +20,11 @@ const farsiNumbers = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"
 export const farsify = (number: number) => {
   const stringified = String(number);
   const result = [];
+  let j = 0;
 
-  for (const char of stringified) {
-    result.push(farsiNumbers[+char]);
+  for (let i = stringified.length - 1; i > -1; i--) {
+    result.unshift(farsiNumbers[+stringified[i]]);
+    if (++j % 3 == 0 && i > 0) result.unshift(",");
   }
 
   return result.join("");
