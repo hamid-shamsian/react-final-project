@@ -58,13 +58,7 @@ const downloadImages = async (images: string[], path: string): Promise<File[]> =
       const imageURL = `${config.BACKEND_BASE_URL}/images/products/${path}/${image}`;
 
       // TODO: change line below and use axios (httpService) instead... (CORS was the issue... ---> because of proxy...)
-      const response = await fetch(imageURL, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "image"
-        }
-      });
+      const response = await fetch(imageURL);
 
       const blob = await response.blob();
 
@@ -138,8 +132,8 @@ const ImageInput = forwardRef(({ title, images = [], path, max = 5 }: ImageInput
           <Button
             variant='outlined'
             component='span'
-            endIcon={<CloudUploadIcon sx={{ mr: 2 }} />}
-            sx={{ marginRight: 3 }}
+            endIcon={<CloudUploadIcon sx={{ ml: 2 }} />}
+            sx={{ ml: 3 }}
             disabled={selectedImages.length === max}
           >
             انتخاب تصویر

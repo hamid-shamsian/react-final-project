@@ -9,7 +9,7 @@ import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -90,7 +90,7 @@ const closedMixin = (theme: Theme): CSSObject => ({
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
-  justifyContent: "flex-end",
+  justifyContent: "flex-start",
   padding: theme.spacing(0, 1),
   // necessary for content to be below app bar
   ...theme.mixins.toolbar
@@ -109,7 +109,7 @@ const AppBar = styled(MuiAppBar, {
     duration: theme.transitions.duration.leavingScreen
   }),
   ...(open && {
-    marginRight: drawerWidth,
+    marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
     transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
@@ -151,8 +151,8 @@ const AdminMenu = ({ children }: AdminMenuProps) => {
             color='inherit'
             aria-label='open drawer'
             onClick={handleDrawerOpen}
-            edge='end'
-            sx={{ marginLeft: 0, ...(open && { display: "none" }) }}
+            edge='start'
+            sx={{ marginRight: 0, ...(open && { display: "none" }) }}
           >
             <MenuIcon />
           </IconButton>
@@ -162,10 +162,10 @@ const AdminMenu = ({ children }: AdminMenuProps) => {
         </Toolbar>
       </AppBar>
 
-      <Drawer variant='permanent' open={open} anchor='right'>
+      <Drawer variant='permanent' open={open} anchor='left'>
         <DrawerHeader>
           <IconButton onClick={handleDrawerClose}>
-            <ChevronRightIcon />
+            <ChevronLeftIcon />
           </IconButton>
         </DrawerHeader>
 
@@ -175,8 +175,8 @@ const AdminMenu = ({ children }: AdminMenuProps) => {
           {primaryMenuItems.map((item, i) => (
             <ListItem key={i} disablePadding sx={{ display: "block", color: "inherit" }} component={CustomNavLink} to={item.to} end>
               <ListItemButton sx={{ minHeight: 48, justifyContent: open ? "initial" : "center", px: 2.5 }}>
-                <ListItemIcon sx={{ minWidth: 0, ml: open ? 3 : "auto", justifyContent: "center" }}>{item.icon}</ListItemIcon>
-                <ListItemText primary={item.title} sx={{ opacity: open ? 1 : 0, textAlign: "right" }} />
+                <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : "auto", justifyContent: "center" }}>{item.icon}</ListItemIcon>
+                <ListItemText primary={item.title} sx={{ opacity: open ? 1 : 0, textAlign: "left" }} />
               </ListItemButton>
             </ListItem>
           ))}
@@ -186,10 +186,10 @@ const AdminMenu = ({ children }: AdminMenuProps) => {
 
         <List component='nav'>
           {secondaryMenuItems.map((item, i) => (
-            <ListItem key={i} disablePadding sx={{ display: "block", color: "inherit" }} component={CustomNavLink} to={item.to}>
+            <ListItem key={i} disablePadding sx={{ display: "block", color: "inherit" }} component={CustomNavLink} to={item.to} end>
               <ListItemButton sx={{ minHeight: 48, justifyContent: open ? "initial" : "center", px: 2.5 }}>
-                <ListItemIcon sx={{ minWidth: 0, ml: open ? 3 : "auto", justifyContent: "center" }}>{item.icon}</ListItemIcon>
-                <ListItemText primary={item.title} sx={{ opacity: open ? 1 : 0, textAlign: "right" }} />
+                <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : "auto", justifyContent: "center" }}>{item.icon}</ListItemIcon>
+                <ListItemText primary={item.title} sx={{ opacity: open ? 1 : 0, textAlign: "left" }} />
               </ListItemButton>
             </ListItem>
           ))}

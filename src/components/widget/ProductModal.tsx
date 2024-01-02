@@ -118,7 +118,7 @@ const ProductModal = ({ data, categories = [], onSubmit, onCancel }: ProductModa
           {data.product ? "ویرایش محصول" : "محصول جدید"}
         </Typography>
 
-        <Box overflow='auto' marginY={2} paddingLeft={2}>
+        <Box overflow='auto' marginY={2} pr={2}>
           <RichRHFTextField {...inputs.name} error={errors} control={control} />
 
           <Box display='flex' gap={3}>
@@ -143,7 +143,7 @@ const ProductModal = ({ data, categories = [], onSubmit, onCancel }: ProductModa
           <Button type='submit' variant='contained' color='success'>
             ذخیره
           </Button>
-          <Button variant='outlined' color='error' sx={{ mr: 2 }} onClick={onCancel}>
+          <Button variant='outlined' color='error' sx={{ ml: 2 }} onClick={onCancel}>
             انصراف
           </Button>
         </Box>

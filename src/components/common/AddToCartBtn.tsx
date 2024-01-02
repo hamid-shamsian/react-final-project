@@ -15,7 +15,7 @@ const AddToCartBtn = ({ enabled, addedQty, selectedQty, onClick }: AddToCartBtnP
     return (
       <Button variant='contained' fullWidth onClick={onClick}>
         اضافه به سبد خرید
-        <AddShoppingCartIcon sx={{ mr: 2 }} />
+        <AddShoppingCartIcon sx={{ ml: 2 }} />
       </Button>
     );
 
@@ -23,7 +23,7 @@ const AddToCartBtn = ({ enabled, addedQty, selectedQty, onClick }: AddToCartBtnP
     return (
       <Button variant='outlined' color='error' fullWidth onClick={onClick}>
         حذف از سبد خرید
-        <ClearIcon sx={{ mr: 2 }} />
+        <ClearIcon sx={{ ml: 2 }} />
       </Button>
     );
 
@@ -31,7 +31,7 @@ const AddToCartBtn = ({ enabled, addedQty, selectedQty, onClick }: AddToCartBtnP
     return (
       <Button variant='contained' color='success' fullWidth onClick={onClick}>
         ثبت تغییرات
-        <SaveIcon sx={{ mr: 2 }} />
+        <SaveIcon sx={{ ml: 2 }} />
       </Button>
     );
 

@@ -70,8 +70,8 @@ const Navigation = ({ onItemClick, layout = "column" }: NavigationProps) => {
           flexDirection: layout,
           alignItems: layout === "row" ? "center" : "start",
           gap: 5,
-          pl: layout === "row" ? 3 : 10,
-          pr: layout === "row" ? 0 : 5,
+          pr: layout === "row" ? 3 : 10,
+          pl: layout === "row" ? 0 : 5,
           py: layout === "row" ? 0 : 5
         }}
       >

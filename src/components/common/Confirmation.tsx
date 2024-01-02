@@ -17,7 +17,7 @@ const Confirmation = ({ message, confirmTerm = "تایید", onConfirm, onCancel
       <Button variant='contained' color='error' onClick={onConfirm}>
         {confirmTerm}
       </Button>
-      <Button variant='outlined' sx={{ mr: 2 }} onClick={onCancel}>
+      <Button variant='outlined' sx={{ ml: 2 }} onClick={onCancel}>
         انصراف
       </Button>
     </div>

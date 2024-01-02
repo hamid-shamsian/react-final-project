@@ -97,7 +97,7 @@ const AdminStockPage = () => {
 
   return (
     <>
-      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingLeft: 5, mb: 3 }}>
+      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", pr: 5, mb: 3 }}>
         <Typography variant='h4' component='h2' mb={5}>
           مدیریت موجودی و قیمت‌ها
         </Typography>
@@ -108,7 +108,7 @@ const AdminStockPage = () => {
               {bulkEditProducts.isPending ? <LoadingSpinner size={24} /> : "انصراف"}
             </Button>
           )}
-          <Button variant='contained' color='success' disabled={!someInputsChanged} onClick={handleSubmit} sx={{ width: "150px", mr: 3 }}>
+          <Button variant='contained' color='success' disabled={!someInputsChanged} onClick={handleSubmit} sx={{ width: "150px", ml: 3 }}>
             {bulkEditProducts.isPending ? <LoadingSpinner size={24} /> : "ثبت تغییرات"}
           </Button>
         </Box>

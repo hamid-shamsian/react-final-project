@@ -81,7 +81,7 @@ const LoginPage = () => {
 
             <PasswordInput name='password' error={errors} control={control} rules={{ required: "کلمه عبور را وارد کنید" }} />
 
-            <FormControlLabel control={<Checkbox value='remember' color='primary' />} label='مرا بخاطر بسپار' sx={{ mr: 0 }} />
+            <FormControlLabel control={<Checkbox value='remember' color='primary' />} label='مرا بخاطر بسپار' sx={{ ml: 0 }} />
 
             <Button type='submit' fullWidth variant='contained' sx={{ mt: 3, mb: 2 }}>
               ورود

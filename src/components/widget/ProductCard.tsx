@@ -30,8 +30,8 @@ const ProductCard = ({ product }: ProductCardProps) => {
             {farsify(product.price)} تومان
           </Typography>
         </Box>
-        <CardActions sx={{ display: "flex", justifyContent: "end", position: "absolute", left: 0, bottom: 0 }}>
-          <Rating precision={0.5} value={product.rating.rate} size='small' sx={{ direction: "ltr", ml: 1 }} />
+        <CardActions sx={{ display: "flex", position: "absolute", right: 0, bottom: 0 }}>
+          <Rating precision={0.5} value={product.rating.rate} size='small' sx={{ direction: "ltr", mr: 2 }} />
           <IconButton color='info' type='button' onClick={e => e.preventDefault()}>
             <AddShoppingCartIcon />
           </IconButton>

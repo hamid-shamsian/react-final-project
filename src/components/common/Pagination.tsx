@@ -1,14 +1,11 @@
 import { ReactNode, useEffect } from "react";
 import Box from "@mui/material/Box";
 import MuiPagination from "@mui/material/Pagination";
-import PaginationItem from "@mui/material/PaginationItem";
 import Typography from "@mui/material/Typography";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
 interface PaginationProps {
   children: ReactNode;
@@ -64,13 +61,7 @@ const Pagination = ({ children, itemsTitle, itemsCount, page, perPage, onPageCha
 
       {pagesCount > 1 && (
         <Box sx={{ display: "flex", justifyContent: "center" }}>
-          <MuiPagination
-            count={pagesCount}
-            page={page}
-            onChange={handlePageChange}
-            renderItem={item => <PaginationItem slots={{ previous: ArrowForwardIcon, next: ArrowBackIcon }} {...item} />}
-            sx={{ marginTop: 5 }}
-          />
+          <MuiPagination count={pagesCount} page={page} onChange={handlePageChange} sx={{ marginTop: 5 }} />
         </Box>
       )}
     </>

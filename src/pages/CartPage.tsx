@@ -43,14 +43,14 @@ const CartPage = () => {
         <>
           <StripedTable columns={tableColumns} rowsData={richCartItems} actions={{ delete: handleDelete, qty: handleChangeQty }} />
 
-          <Box sx={{ display: "flex", justifyContent: "end", alignItems: "center", gap: 4, my: 10 }}>
-            <Typography sx={{ display: "flex", gap: 5 }}>
+          <Box sx={{ display: "flex", justifyContent: "end", alignItems: "center", gap: 10, my: 10 }}>
+            <Typography sx={{ display: "flex", gap: 3 }}>
               مجموع کل: <span>{farsify(totalPrice)} تومان</span>
             </Typography>
             <CustomLink to='/checkout'>
               <Button variant='contained'>
                 تکمیل خرید
-                <LeftArrowIcon sx={{ mr: 1 }} />
+                <LeftArrowIcon sx={{ ml: 1 }} />
               </Button>
             </CustomLink>
           </Box>
@@ -60,7 +60,10 @@ const CartPage = () => {
           <EmptyCartIcon sx={{ fontSize: 100, color: "red" }} />
           <Typography>سبد خرید شما خالی‌ست!</Typography>
           <CustomLink to='/categories' sx={{ mt: 5 }}>
-            <Button variant='contained'>برو به فروشگاه</Button>
+            <Button variant='contained'>
+              برو به فروشگاه
+              <LeftArrowIcon sx={{ ml: 1 }} />
+            </Button>
           </CustomLink>
         </Box>
       )}

@@ -1,5 +1,5 @@
 import { Control, Controller } from "react-hook-form";
-import RTLTextField from "../mui-customized/RTLTextField";
+import TextField from "@mui/material/TextField";
 
 interface RHFTextFieldProps {
   name: string;
@@ -20,7 +20,7 @@ const RHFTextField = ({ name, rules, error, control, ...restProps }: RHFTextFiel
       control={control}
       rules={rules}
       render={({ field }) => (
-        <RTLTextField {...field} error={Boolean(error[name])} helperText={error[name]?.message} {...restProps} fullWidth margin='normal' />
+        <TextField {...field} error={Boolean(error[name])} helperText={error[name]?.message} {...restProps} fullWidth margin='normal' />
       )}
     />
   );

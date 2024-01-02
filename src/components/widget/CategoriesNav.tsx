@@ -47,7 +47,7 @@ const CategoriesNav = ({ categories }: CategoriesNavProps) => {
               <Collapse component='li' in={opens[i]} timeout='auto' unmountOnExit>
                 <List disablePadding>
                   {cat.subcategories?.map((subCat, j) => (
-                    <ListItemLink key={`${i}${j}`} to={`/categories/${cat.slugname}/${subCat.slugname}`} name={subCat.name} sx={{ pr: 5 }} />
+                    <ListItemLink key={`${i}${j}`} to={`/categories/${cat.slugname}/${subCat.slugname}`} name={subCat.name} sx={{ pl: 5 }} />
                   ))}
                 </List>
               </Collapse>
@@ -67,7 +67,7 @@ const CategoriesNav = ({ categories }: CategoriesNavProps) => {
     return (
       <li>
         <ListItemButton component={CustomNavLink} to={to} {...other}>
-          <ListItemText primary={name} sx={{ textAlign: "right" }} />
+          <ListItemText primary={name} sx={{ textAlign: "left" }} />
           <IconButton
             onClick={e => {
               e.preventDefault();

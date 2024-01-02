@@ -3,7 +3,7 @@ import { red } from "@mui/material/colors";
 import "./fonts.css";
 
 const light = createTheme({
-  // direction: "rtl",
+  direction: "rtl",
   typography: {
     fontFamily: "IranianSans"
   },
@@ -22,7 +22,7 @@ const light = createTheme({
 });
 
 const dark = createTheme({
-  // direction: "rtl",
+  direction: "rtl",
   typography: {
     fontFamily: "IranianSans"
   },

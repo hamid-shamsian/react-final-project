@@ -74,7 +74,7 @@ const AdminProductsPage = () => {
 
   return (
     <>
-      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingLeft: 5, mb: 3 }}>
+      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", pr: 5, mb: 3 }}>
         <Typography variant='h4' component='h2' mb={5}>
           مدیریت محصولات
         </Typography>

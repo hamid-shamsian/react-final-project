@@ -39,7 +39,7 @@ const OrderModal = ({ open, order, onSetDelivered, onCancel }: OrderModalProps) 
     <Modal open={open} onClose={onCancel}>
       <Box p={1} position='relative'>
         <Box display='flex' width={700} mb={3}>
-          <Box display='flex' flexDirection='column' gap={2} alignItems='end' ml={5}>
+          <Box display='flex' flexDirection='column' gap={2} alignItems='end' ml={3}>
             <Typography whiteSpace='nowrap'>نام مشتری</Typography>
             <Typography whiteSpace='nowrap'>آدرس</Typography>
             <Typography whiteSpace='nowrap'>تلفن</Typography>
@@ -69,7 +69,7 @@ const OrderModal = ({ open, order, onSetDelivered, onCancel }: OrderModalProps) 
           </Box>
         )}
 
-        <IconButton sx={{ position: "absolute", left: 0, top: 0 }} onClick={onCancel}>
+        <IconButton sx={{ position: "absolute", right: 0, top: 0 }} onClick={onCancel}>
           <CloseOutlinedIcon />
         </IconButton>
       </Box>
