@@ -1,5 +1,4 @@
-import http from "./httpService";
-import config from "../../config.json";
+import apiClient from "./apiClient";
 import { SubCategory } from "./subCatService";
 
 export interface Category {
@@ -19,9 +18,9 @@ interface GetAllCategoriesResponse {
   total: number;
 }
 
-const categoryEndpoint = config.API_BASE_URL + "/categories";
+const categoryEndpoint = "/categories";
 
-const getAll = () => http.get<GetAllCategoriesResponse>(categoryEndpoint + "?limit=100").then(res => res.data);
+const getAll = () => apiClient.get<GetAllCategoriesResponse>(categoryEndpoint + "?limit=100").then(res => res.data);
 
 const catService = {
   getAll

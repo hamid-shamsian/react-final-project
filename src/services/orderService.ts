@@ -1,7 +1,6 @@
-import http from "./httpService";
-import config from "../../config.json";
+import apiClient from "./apiClient";
 
-const ordersEndpoint = config.API_BASE_URL + "/orders";
+const ordersEndpoint = "/orders";
 
 interface OrderProduct {
   product: string;
@@ -27,12 +26,12 @@ interface NewOrder {
 
 const getAll = (page: number = 1, limit: number = 5, filter: string = "all") => {
   const filterQuery = filter !== "all" ? `&deliveryStatus=${filter === "delivered"}` : "";
-  return http.get(`${ordersEndpoint}?limit=${limit}&page=${page}${filterQuery}`);
+  return apiClient.get(`${ordersEndpoint}?limit=${limit}&page=${page}${filterQuery}`);
 };
 
-const addNew = (order: NewOrder) => http.post(ordersEndpoint, order);
+const addNew = (order: NewOrder) => apiClient.post(ordersEndpoint, order);
 
-const editById = ({ id, order }: { id: string; order: Partial<Order> }) => http.patch(`${ordersEndpoint}/${id}`, order).then(res => res.data);
+const editById = ({ id, order }: { id: string; order: Partial<Order> }) => apiClient.patch(`${ordersEndpoint}/${id}`, order).then(res => res.data);
 
 const orderService = {
   getAll,

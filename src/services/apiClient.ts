@@ -1,19 +1,13 @@
 import axios, { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import logService from "./logService";
+import config from "../../config.json";
 
-const setToken = (jwt: string | null) => {
-  if (jwt) {
-    axios.defaults.headers.common["Authorization"] = "Bearer " + jwt;
-  } else {
-    delete axios.defaults.headers.common["Authorization"];
-  }
-};
+const apiClient = axios.create({ baseURL: config.API_BASE_URL });
 
 type CustomErrorHandling = (e: AxiosError) => Promise<any>;
 
 let customErrorHandling: CustomErrorHandling;
-
 const setCustomErrorHandling = (func: CustomErrorHandling) => (customErrorHandling = func);
 
 const errorHandler = (error: AxiosError) => {
@@ -35,19 +29,14 @@ const errorHandler = (error: AxiosError) => {
   return Promise.reject(error);
 };
 
-axios.interceptors.response.use(null, errorHandler);
-
-axios.defaults.withCredentials = true; // to be able to send cookies with the requests.
-
-const http = {
-  get: axios.get,
-  post: axios.post,
-  put: axios.put,
-  patch: axios.patch,
-  delete: axios.delete,
-  requestByConfig: axios,
-  setToken,
-  setCustomErrorHandling
+const setToken = (jwt: string | null) => {
+  if (jwt) apiClient.defaults.headers.common["Authorization"] = "Bearer " + jwt;
+  else delete apiClient.defaults.headers.common["Authorization"];
 };
 
-export default http;
+apiClient.interceptors.response.use(null, errorHandler);
+apiClient.defaults.withCredentials = true; // to be able to send cookies with the requests.
+
+export const authUtils = { setToken, setCustomErrorHandling };
+
+export default apiClient;

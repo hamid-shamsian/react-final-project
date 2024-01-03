@@ -1,12 +1,11 @@
-import http from "./httpService";
+import apiClient from "./apiClient";
 import authService from "./authService";
-import config from "../../config.json";
 
-const userEndpoint = config.API_BASE_URL + "/users";
+const userEndpoint = "/users";
 
-const getUserById = (id: string) => http.get(userEndpoint + "/" + id);
+const getUserById = (id: string) => apiClient.get(userEndpoint + "/" + id);
 
-const editById = ({ id, user }: any) => http.patch(`${userEndpoint}/${id}`, user).then(res => res.data);
+const editById = ({ id, user }: any) => apiClient.patch(`${userEndpoint}/${id}`, user).then(res => res.data);
 
 const getLoggedInUser = async () => {
   const userId = authService.getLoggedInUserId();

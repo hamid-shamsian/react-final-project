@@ -1,5 +1,4 @@
-import http from "./httpService";
-import config from "../../config.json";
+import apiClient from "./apiClient";
 import { Category } from "./catService";
 import { SubCategory } from "./subCatService";
 
@@ -55,26 +54,26 @@ export interface EditingData {
   product: Object;
 }
 
-const productEndpoint = config.API_BASE_URL + "/products";
+const productEndpoint = "/products";
 
 const getAll = (page: number = 1, limit: number = 5, ofCatId?: string, ofSubCatId?: string) => {
   const filterQuery = ofSubCatId ? `&subcategory=${ofSubCatId}` : ofCatId ? `&category=${ofCatId}` : "";
-  return http.get<GetAllResponse>(`${productEndpoint}?limit=${limit}&page=${page}${filterQuery}`).then(res => res.data);
+  return apiClient.get<GetAllResponse>(`${productEndpoint}?limit=${limit}&page=${page}${filterQuery}`).then(res => res.data);
 };
 
-const addNew = (product: FormData) => http.post(productEndpoint, product);
+const addNew = (product: FormData) => apiClient.post(productEndpoint, product);
 
 const getById = (id: string) =>
-  http
+  apiClient
     .get<RichProduct>(`${productEndpoint}/${id}`)
     .then(res => res.data)
     .catch(er => {
       throw er;
     });
 
-const deleteById = (id: string) => http.delete(`${productEndpoint}/${id}`).then(res => res.data);
+const deleteById = (id: string) => apiClient.delete(`${productEndpoint}/${id}`).then(res => res.data);
 
-const editById = ({ id, product }: EditingData) => http.patch<Product>(`${productEndpoint}/${id}`, product).then(res => res.data);
+const editById = ({ id, product }: EditingData) => apiClient.patch<Product>(`${productEndpoint}/${id}`, product).then(res => res.data);
 
 const productService = {
   getAll,

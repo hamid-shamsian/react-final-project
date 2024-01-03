@@ -1,7 +1,6 @@
-import http from "./httpService";
-import config from "../../config.json";
+import apiClient from "./apiClient";
 
-const subCategoryEndpoint = config.API_BASE_URL + "/subcategories";
+const subCategoryEndpoint = "/subcategories";
 
 export interface SubCategory {
   _id: string;
@@ -21,10 +20,10 @@ interface GetAllSubCategoriesResponse {
 
 const getAll = (byCategoryId?: string) => {
   const filterQuery = byCategoryId ? `&category=${byCategoryId}` : "";
-  return http.get<GetAllSubCategoriesResponse>(`${subCategoryEndpoint}?limit=100${filterQuery}`).then(res => res.data);
+  return apiClient.get<GetAllSubCategoriesResponse>(`${subCategoryEndpoint}?limit=100${filterQuery}`).then(res => res.data);
 };
 
-const getById = (id: string) => http.get(subCategoryEndpoint + "/" + id).then(res => res.data);
+const getById = (id: string) => apiClient.get(subCategoryEndpoint + "/" + id).then(res => res.data);
 
 const subCatService = {
   getAll,
