@@ -40,6 +40,12 @@ const dark = createTheme({
   }
 });
 
-const themes = { light, dark };
+interface Themes {
+  light: object;
+  dark: object;
+  [key: string]: object;
+}
+
+const themes: Themes = { light, dark };
 
 export default themes;

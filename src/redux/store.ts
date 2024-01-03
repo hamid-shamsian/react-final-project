@@ -2,12 +2,12 @@ import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { persistReducer, persistStore, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import userReducer from "./features/userSlice";
-import themeReducer from "./features/themeSlice";
+import themeModeReducer from "./features/themeModeSlice";
 import cartReducer from "./features/cartSlice";
 
 const persistConfig = { key: "root", storage, blacklist: ["user"] };
 
-const rootReducer = combineReducers({ user: userReducer, theme: themeReducer, cart: cartReducer });
+const rootReducer = combineReducers({ user: userReducer, themeMode: themeModeReducer, cart: cartReducer });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 

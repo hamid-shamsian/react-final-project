@@ -8,24 +8,19 @@ import createCache from "@emotion/cache";
 import { prefixer } from "stylis";
 import { ToastContainer } from "react-toastify";
 import router from "./routes/routes";
-import useTheme from "./hooks/useTheme";
+import useThemeMode from "./hooks/useThemeMode";
 import themes from "./styles/themes";
 import "react-toastify/dist/ReactToastify.css";
 
 const queryClient = new QueryClient();
-
-const cacheRtl = createCache({
-  key: "muirtl",
-  stylisPlugins: [prefixer, stylisRTLPlugin]
-});
+const cacheRtl = createCache({ key: "muirtl", stylisPlugins: [prefixer, stylisRTLPlugin] });
 
 const App = () => {
-  const theme = useTheme();
+  const themeMode = useThemeMode();
 
-  // TODO: Satisfy TS in order to change line below to: themes[theme]
   return (
     <CacheProvider value={cacheRtl}>
-      <ThemeProvider theme={themes[theme === "dark" ? "dark" : "light"]}>
+      <ThemeProvider theme={themes[themeMode] ?? themes.light}>
         <CssBaseline />
         <QueryClientProvider client={queryClient}>
           <RouterProvider router={router} />

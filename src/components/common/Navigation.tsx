@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { List, Box, Typography, Switch, Badge } from "@mui/material";
+import { List, Box, Typography, Badge } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import LoginIcon from "@mui/icons-material/Login";
@@ -10,9 +10,9 @@ import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import CustomNavLink from "./CustomNavLink";
 import ThemeModeSwitch from "../mui-customized/ThemeModeSwitch";
 import useUser from "../../hooks/useUser";
-import useTheme from "../../hooks/useTheme";
+import useThemeMode from "../../hooks/useThemeMode";
 import useCart from "../../hooks/useCart";
-import { themeActions } from "../../redux/features/themeSlice";
+import { themeModeActions } from "../../redux/features/themeModeSlice";
 import { CartItem } from "../../redux/features/cartSlice";
 import { farsify } from "../../utils/utilityFuncs";
 
@@ -51,15 +51,15 @@ interface NavigationProps {
 
 const Navigation = ({ onItemClick, layout = "column" }: NavigationProps) => {
   const dispatch = useDispatch();
+  const themeMode = useThemeMode();
   const user = useUser();
-  const theme = useTheme();
   const cart = useCart();
 
   const links = staticLinks.concat(!user ? loggedOutLinks : user.role === "ADMIN" ? adminLinks : userLinks);
 
   return (
     <Box sx={{ display: "flex", flexDirection: layout, alignItems: "center", gap: layout === "row" ? 10 : 2 }}>
-      <ThemeModeSwitch checked={theme === "dark"} onChange={() => dispatch(themeActions.toggle())} sx={{ order: layout === "row" ? 0 : 1 }} />
+      <ThemeModeSwitch checked={themeMode === "dark"} onChange={() => dispatch(themeModeActions.toggle())} sx={{ order: layout === "row" ? 0 : 1 }} />
 
       <List
         component='nav'
