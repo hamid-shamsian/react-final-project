@@ -8,12 +8,13 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import CustomNavLink from "./CustomNavLink";
-import { themeActions } from "../../redux/features/themeSlice";
+import ThemeModeSwitch from "../mui-customized/ThemeModeSwitch";
 import useUser from "../../hooks/useUser";
 import useTheme from "../../hooks/useTheme";
+import useCart from "../../hooks/useCart";
+import { themeActions } from "../../redux/features/themeSlice";
 import { CartItem } from "../../redux/features/cartSlice";
 import { farsify } from "../../utils/utilityFuncs";
-import useCart from "../../hooks/useCart";
 
 const staticLinks = [
   { title: "خانه", icon: <HomeIcon />, href: "/" },
@@ -58,10 +59,7 @@ const Navigation = ({ onItemClick, layout = "column" }: NavigationProps) => {
 
   return (
     <Box sx={{ display: "flex", flexDirection: layout, alignItems: "center", gap: layout === "row" ? 10 : 2 }}>
-      <Box sx={{ order: layout === "row" ? 0 : 1 }}>
-        <Typography variant='caption'>حالت شب</Typography>
-        <Switch checked={theme === "dark"} onChange={() => dispatch(themeActions.toggle())} />
-      </Box>
+      <ThemeModeSwitch checked={theme === "dark"} onChange={() => dispatch(themeActions.toggle())} sx={{ order: layout === "row" ? 0 : 1 }} />
 
       <List
         component='nav'

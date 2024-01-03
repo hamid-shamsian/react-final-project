@@ -8,7 +8,7 @@ function BurgerMenu() {
 
   return (
     <>
-      <Drawer open={openDrawer} onClose={() => setOpenDrawer(false)}>
+      <Drawer open={openDrawer} onClose={() => setOpenDrawer(false)} anchor='right'>
         <Navigation onItemClick={() => setOpenDrawer(false)} />
       </Drawer>
       <IconButton onClick={() => setOpenDrawer(!openDrawer)}>
