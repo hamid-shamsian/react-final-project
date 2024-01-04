@@ -8,14 +8,13 @@ const getUserById = (id: string) => apiClient.get(userEndpoint + "/" + id);
 const editById = ({ id, user }: any) => apiClient.patch(`${userEndpoint}/${id}`, user).then(res => res.data);
 
 const getLoggedInUser = async () => {
-  const userId = authService.getLoggedInUserId();
+  const userId = await authService.getLoggedInUserId();
 
   if (userId) {
-    try {
-      const { data } = await getUserById(userId);
-      return data.data.user;
-    } catch (error) {}
+    const { data } = await getUserById(userId);
+    return data.data.user;
   }
+
   return null;
 };
 

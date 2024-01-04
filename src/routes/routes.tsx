@@ -15,7 +15,7 @@ import SignupPage from "../pages/SignupPage";
 import LogoutPage from "../pages/LogoutPage";
 import AdminPagesLoading from "../pages/admin/AdminPagesLoading";
 import Suspended from "../components/common/Suspended";
-import protectRoute from "./protectedRoutesLoaders";
+import protectRoute, { userLoader } from "./loaders";
 
 // Lazy Imports: note that the addresses must be relative to the utilityFuncs module.
 const AdminLayout = lazyImport("../components/layout/AdminLayout");
@@ -30,6 +30,7 @@ const router = createBrowserRouter([
     path: "/",
     element: <UserLayout />,
     errorElement: <ErrorPage />,
+    loader: userLoader,
     children: [
       { index: true, element: <HomePage /> },
       { path: "categories/:cat?/:subCat?", element: <CategoriesPage /> },

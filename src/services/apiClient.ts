@@ -10,7 +10,7 @@ type CustomErrorHandling = (e: AxiosError) => Promise<any>;
 let customErrorHandling: CustomErrorHandling;
 const setCustomErrorHandling = (func: CustomErrorHandling) => (customErrorHandling = func);
 
-const errorHandler = (error: AxiosError) => {
+const errorHandler = async (error: AxiosError) => {
   const expectedError = error.response && error.response.status >= 400 && error.response.status < 500;
 
   if (!expectedError) {
@@ -18,12 +18,11 @@ const errorHandler = (error: AxiosError) => {
     toast.error("خطای سرور یا عدم اتصال به اینترنت!");
   }
 
-  if (error.response?.status === 401) {
-    try {
-      return customErrorHandling(error);
-    } catch (error) {
-      return Promise.reject(error);
-    }
+  try {
+    const result = await customErrorHandling(error);
+    if (result) return result;
+  } catch (error) {
+    return Promise.reject(error);
   }
 
   return Promise.reject(error);

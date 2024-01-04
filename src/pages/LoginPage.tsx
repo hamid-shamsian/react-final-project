@@ -1,6 +1,8 @@
+import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -13,8 +15,9 @@ import Typography from "@mui/material/Typography";
 import CustomLink from "../components/common/CustomLink";
 import RichRHFTextField from "../components/common/RichRHFTextField";
 import PasswordInput from "../components/common/PasswordInput";
-import authService from "../services/authService";
-import { userActions } from "../redux/features/userSlice";
+import LoadingSpinner from "../components/common/LoadingSpinner";
+import useAuth from "../hooks/useAuth";
+import { login } from "../redux/features/auth/authThunks";
 import loginImage from "../assets/images/login.webp";
 
 interface FormValues {
@@ -26,21 +29,22 @@ const LoginPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
+  const { user, isPending, error } = useAuth();
+
+  useEffect(() => {
+    if (error == 401) toast.error("نام‌کاربری یا کلمه‌عبور اشتباه است"); // TODO: replace with MUI Snackbar component.
+  }, [error]);
 
   // prettier-ignore
   const { control, handleSubmit: validateForm, formState: {errors} } = useForm<FormValues>({ defaultValues: { username: '', password: '' }});
 
-  const handleSubmit = async (data: FormValues) => {
-    const { username, password } = data;
-
-    try {
-      const user = await authService.login(username, password);
-
-      dispatch(userActions.setUser(user));
-
-      if (user.role === "ADMIN") navigate("/admin");
-      else navigate(location.state?.from ?? "/");
-    } catch (error) {}
+  const handleSubmit = async (credentials: FormValues) => {
+    dispatch(login(credentials) as any)
+      .unwrap()
+      .then((user: any) => {
+        if (user.role === "ADMIN") navigate("/admin");
+        else navigate(location.state?.from ?? "/");
+      });
   };
 
   return (
@@ -83,9 +87,15 @@ const LoginPage = () => {
 
             <FormControlLabel control={<Checkbox value='remember' color='primary' />} label='مرا بخاطر بسپار' sx={{ ml: 0 }} />
 
-            <Button type='submit' fullWidth variant='contained' sx={{ mt: 3, mb: 2 }}>
-              ورود
-            </Button>
+            <Box sx={{ height: 80, pt: 3 }}>
+              {isPending ? (
+                <LoadingSpinner size={35} />
+              ) : !user ? (
+                <Button type='submit' fullWidth variant='contained'>
+                  ورود
+                </Button>
+              ) : null}
+            </Box>
 
             <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 1, mt: 5, fontSize: 13 }}>
               <CustomLink to='#' colors={{ light: "red", dark: "yellow" }}>

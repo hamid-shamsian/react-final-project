@@ -9,7 +9,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import CustomNavLink from "./CustomNavLink";
 import ThemeModeSwitch from "../mui-customized/ThemeModeSwitch";
-import useUser from "../../hooks/useUser";
+import useAuth from "../../hooks/useAuth";
 import useThemeMode from "../../hooks/useThemeMode";
 import useCart from "../../hooks/useCart";
 import { themeModeActions } from "../../redux/features/themeModeSlice";
@@ -52,8 +52,8 @@ interface NavigationProps {
 const Navigation = ({ onItemClick, layout = "column" }: NavigationProps) => {
   const dispatch = useDispatch();
   const themeMode = useThemeMode();
-  const user = useUser();
   const cart = useCart();
+  const { user } = useAuth();
 
   const links = staticLinks.concat(!user ? loggedOutLinks : user.role === "ADMIN" ? adminLinks : userLinks);
 

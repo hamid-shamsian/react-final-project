@@ -6,7 +6,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import RHFTextField from "../components/common/RHFTextField";
 import PersianDatePicker from "../components/common/PersianDatePicker";
-import useUser from "../hooks/useUser";
+import useAuth from "../hooks/useAuth";
 // import userService from "../services/userService";
 
 export interface FormValues {
@@ -45,7 +45,7 @@ const inputs = {
 };
 
 const CheckoutPage = () => {
-  const user = useUser();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -57,7 +57,7 @@ const CheckoutPage = () => {
 
   useEffect(() => {
     if (!user) navigate("/login", { state: { from: location.pathname } });
-  }, [user]);
+  }, []);
 
   useEffect(() => {
     localStorage.setItem("deliveryDate", JSON.stringify(deliveryDate));

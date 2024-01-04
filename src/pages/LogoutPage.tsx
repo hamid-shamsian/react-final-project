@@ -1,22 +1,29 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { userActions } from "../redux/features/userSlice";
-import authService from "../services/authService";
 import { cartActions } from "../redux/features/cartSlice";
+import { logout } from "../redux/features/auth/authThunks";
+import LoadingSpinner from "../components/common/LoadingSpinner";
 
 const LogoutPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    authService.logout();
-    dispatch(userActions.setUser(null));
     dispatch(cartActions.clearCart());
-    navigate("/");
+
+    (async () => {
+      dispatch(logout() as any)
+        .unwrap()
+        .then((_: any) => navigate("/"));
+    })();
   });
 
-  return null;
+  return (
+    <div style={{ height: "80vh" }}>
+      <LoadingSpinner />
+    </div>
+  );
 };
 
 export default LogoutPage;

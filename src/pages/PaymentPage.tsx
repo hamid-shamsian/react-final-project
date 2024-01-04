@@ -5,13 +5,13 @@ import { Box, Button, Typography } from "@mui/material";
 import SuccessIcon from "@mui/icons-material/CheckCircleOutline";
 import FailIcon from "@mui/icons-material/CancelOutlined";
 import useCart from "../hooks/useCart";
-import useUser from "../hooks/useUser";
+import useAuth from "../hooks/useAuth";
 import useAddOrder from "../hooks/useAddOrder";
 import { cartActions } from "../redux/features/cartSlice";
 
 const PaymentPage = () => {
   const cart = useCart();
-  const user = useUser();
+  const { user } = useAuth();
   const dispatch = useDispatch();
 
   const [searchParams] = useSearchParams();
